@@ -1,0 +1,16 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+    - vendor/nesbot/carbon/extension.neon
+
+parameters:
+    level: 7
+    paths:
+        - app/
+        - tests/
+    excludePaths:
+        - vendor
+        - storage
+        - public
+    ignoreErrors:
+        - '#Call to an undefined method PHPUnit\\Framework\\TestCase::actingAs\(\)#'
+        - '#Method App\\Livewire\\Actions\\Logout::__invoke\(\) has no return type specified#'
