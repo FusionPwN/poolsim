@@ -8,8 +8,8 @@
 @php
 @endphp
 
-<th class="py-2 px-2 first:ps-0 last:pe-0 text-start text-sm font-medium text-zinc-800 dark:text-white" {{ $attributes }}>
-	<div class="flex in-[.group\/center-align]:justify-center in-[.group\/end-align]:justify-end">
+<th {{ $attributes->merge(['class' => 'py-2 px-2 first:ps-0 last:pe-0 text-start text-sm font-medium text-zinc-800 dark:text-white']) }} {{ $attributes }}>
+	<div class="flex in-[.group\/center-align]:justify-center in-[.group\/end-align]:justify-end @if (Str::contains($attributes->get('class'), 'text-center')) justify-center @endif">
 		@if ($sortable)
 			<button type="button" class="group/sortable flex items-center gap-1 -my-1 -ms-2 -me-2 px-2 py-1  in-[.group\/end-align]:flex-row-reverse in-[.group\/end-align]:-me-2 in-[.group\/end-align]:-ms-8" data-flux-table-sortable="">
 				<div>{{ $name }}</div>

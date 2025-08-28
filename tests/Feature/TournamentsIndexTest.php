@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\TournamentStatus;
-use App\Livewire\TournamentsIndex;
+use App\Livewire\Tournament\Index;
 use App\Models\Tournament;
 use Livewire\Livewire;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,7 +13,7 @@ uses(RefreshDatabase::class);
 it('renders tournaments', function () {
     Tournament::factory()->count(3)->create();
 
-    Livewire::test(TournamentsIndex::class)
+    Livewire::test(Index::class)
         ->assertStatus(200)
         ->assertSee(Tournament::first()->name);
 });
@@ -21,12 +21,12 @@ it('renders tournaments', function () {
 it('sorts tournaments by column', function () {
 	Tournament::factory()->count(3)->create();
 
-    Livewire::test(TournamentsIndex::class)
+    Livewire::test(Index::class)
         ->call('sort', 'name')
         ->assertSet('sortBy', 'name')
         ->assertSet('sortDirection', 'asc');
 
-    Livewire::test(TournamentsIndex::class)
+    Livewire::test(Index::class)
         ->set('sortBy', 'name')
         ->set('sortDirection', 'desc')
         ->call('sort', 'name')
@@ -37,7 +37,7 @@ it('filters tournaments by search', function () {
     $t1 = Tournament::factory()->create(['name' => 'Alpha']);
     $t2 = Tournament::factory()->create(['name' => 'Beta']);
 
-    Livewire::test(TournamentsIndex::class)
+    Livewire::test(Index::class)
         ->set('search', 'Alpha')
         ->assertSee('Alpha')
         ->assertDontSee('Beta');

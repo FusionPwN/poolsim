@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Tournament;
 
 use Livewire\Component;
 use App\Models\Tournament;
 use Illuminate\Validation\ValidationException;
 
 
-class TournamentForm extends Component
+class Form extends Component
 {
     public string $name = '';
     public int $players = 2;
@@ -37,6 +37,6 @@ class TournamentForm extends Component
 
     public function render(): \Illuminate\View\View
     {
-        return view('livewire.tournament-form');
+        return view('livewire.tournament.form');
     }
 }

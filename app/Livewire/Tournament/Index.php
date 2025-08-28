@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Tournament;
 
 use App\Models\Tournament;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -10,7 +10,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 
 
-class TournamentsIndex extends Component
+class Index extends Component
 {
 	use \Livewire\WithPagination;
 
@@ -74,6 +74,6 @@ class TournamentsIndex extends Component
 	#
     public function render(): View
     {
-        return view('livewire.tournaments-index');
+        return view('livewire.tournament.index');
     }
 }

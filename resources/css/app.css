@@ -82,3 +82,7 @@ tr:not(:last-child) {
 tbody {
 	border: 0;
 }
+
+td {
+	@apply text-zinc-500 dark:text-zinc-300;
+}

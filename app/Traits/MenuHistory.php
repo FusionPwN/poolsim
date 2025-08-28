@@ -4,6 +4,8 @@ namespace App\Traits;
 
 trait MenuHistory
 {
+	# Could be a middleware, since it's a demo this is easier
+
     public int $limit = 5;
 
     /**

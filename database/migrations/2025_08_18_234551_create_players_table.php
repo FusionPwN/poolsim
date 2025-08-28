@@ -16,6 +16,8 @@ return new class extends Migration
 			$table->string('name');
 			$table->enum('gender', ['male', 'female'])->default('male');
 			$table->integer('skill')->default(1);
+			$table->integer('wins')->default(0);
+			$table->integer('losses')->default(0);
 			$table->string('avatar_original')->nullable();
 			$table->string('avatar_processed')->nullable();
             $table->timestamps();
