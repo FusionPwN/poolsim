@@ -57,8 +57,10 @@ class Player extends Model
 
 	/**
 	 * Scope: Only players not in any ongoing tournament.
+	 *  
+	 * @param \Illuminate\Database\Eloquent\Builder<Player> $query
 	 */
-	public function scopeNotInOngoingTournament($query): void
+	public function scopeNotInOngoingTournament(\Illuminate\Database\Eloquent\Builder $query): void
 	{
 		$query->whereDoesntHave('tournaments', function ($q) {
 			$q->where('status', TournamentStatus::ONGOING);
@@ -67,8 +69,10 @@ class Player extends Model
 
 	/**
 	 * Scope: Only players not in any tournament at all.
+	 * 
+	 * @param \Illuminate\Database\Eloquent\Builder<Player> $query
 	 */
-	public function scopeNotInAnyTournament($query): void
+	public function scopeNotInAnyTournament(\Illuminate\Database\Eloquent\Builder $query): void
 	{
 		$query->whereDoesntHave('tournaments');
 	}

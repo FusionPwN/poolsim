@@ -12,9 +12,20 @@
 			</a>
 
 			<flux:navlist variant="outline">
-				<flux:navlist.group :heading="__('Platform')" class="grid">
+				<flux:navlist.group class="grid">
 					<flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
-					<flux:navlist.item icon="numbered-list" :href="route('tournaments.index')" :current="request()->routeIs('tournaments.index')" wire:navigate>{{ __('Tournaments') }}</flux:navlist.item>
+					<flux:navlist.item icon="trophy" :href="route('tournaments.index')" :current="request()->routeIs('tournaments.index')" wire:navigate>{{ __('Tournaments') }}</flux:navlist.item>
+					@if ($tournaments_history = session()->get('menu_history.tournament', []))
+						<div class="relative space-y-[2px] ps-7 data-open:block">
+							<div class="absolute inset-y-[3px] start-0 ms-4 w-px bg-zinc-200 dark:bg-white/30"></div>
+							@foreach ($tournaments_history as $item)
+								<flux:navlist.item icon="eye" :href="route('tournament.show', $item['id'])" :current="request()->routeIs('tournament.show') && request()->route()->tournament->id === $item['id']" wire:navigate>
+									{{ $item['name'] }}
+								</flux:navlist.item>
+							@endforeach
+						</div>
+					@endif
+
 				</flux:navlist.group>
 			</flux:navlist>
 

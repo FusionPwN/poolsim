@@ -45,20 +45,18 @@
 				<x-flux.table.row>
 					<x-flux.table.cell>{{ $tournament->name }}</x-flux.table.cell>
 					<x-flux.table.cell>
-						@if ($tournament->status === TournamentStatus::OPEN)
-							<flux:badge size="sm" color="teal">{{ Str::title($tournament->status->value) }}</flux:badge>
-						@elseif ($tournament->status === TournamentStatus::ONGOING)
-							<flux:badge size="sm" color="orange">{{ Str::title($tournament->status->value) }}</flux:badge>
-						@elseif ($tournament->status === TournamentStatus::ENDED)
-							<flux:badge size="sm" variant="zinc">{{ Str::title($tournament->status->value) }}</flux:badge>
-						@endif
+						<flux:badge size="sm" color="{{ match ($tournament->status) {
+							TournamentStatus::OPEN => 'teal',
+							TournamentStatus::ONGOING => 'orange',
+							TournamentStatus::ENDED => 'zinc',
+						} }}">{{ Str::title($tournament->status->value) }}</flux:badge>
 					</x-flux.table.cell>
 					<x-flux.table.cell>
 						{{ $tournament->created_at->format('d-m-Y H:i') }}
 					</x-flux.table.cell>
 					<x-flux.table.cell>
 						<div class="flex justify-end">
-							<flux:button icon="eye" variant="ghost">View</flux:button>
+							<flux:button icon="eye" variant="ghost" href="{{ route('tournament.show', $tournament) }}">View</flux:button>
 						</div>
 					</x-flux.table.cell>
 				</x-flux.table.row>

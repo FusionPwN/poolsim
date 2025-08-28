@@ -4,6 +4,7 @@ use App\Livewire\Settings\Api;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
+use App\Livewire\TournamentShow;
 use App\Livewire\TournamentsIndex;
 use Illuminate\Support\Facades\Route;
 
@@ -21,11 +22,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::group(['prefix' => 'tournaments'], function () {
         Route::get('/', TournamentsIndex::class)->name('tournaments.index');
+		Route::get('/{tournament}', TournamentShow::class)->name('tournament.show');
     });
 });
 
-/* Route::get('/', TournamentsIndex::class)->name('tournaments.index');
-Route::get('/tournaments/{tournament}', TournamentShow::class)->name('tournament.show');
+/* 
 Route::get('/matches/{match}', MatchShow::class)->name('match.show');
 Route::get('/players/{player}', PlayerShow::class)->name('player.show'); */
 
