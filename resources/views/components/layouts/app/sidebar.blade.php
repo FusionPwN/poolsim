@@ -1,3 +1,7 @@
+@php
+	use App\Models\Tournament;
+	use App\Enums\TournamentStatus;
+@endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 	<head>
@@ -19,8 +23,18 @@
 						<div class="relative space-y-[2px] ps-7 data-open:block">
 							<div class="absolute inset-y-[3px] start-0 ms-4 w-px bg-zinc-200 dark:bg-white/30"></div>
 							@foreach ($tournaments_history as $item)
-								<flux:navlist.item icon="eye" :href="route('tournament.show', $item['id'])" :current="request()->routeIs('tournament.show') && request()->route()->tournament->id === $item['id']" wire:navigate>
-									{{ $item['name'] }}
+								<flux:navlist.item :href="route('tournament.show', $item['id'])" :current="request()->routeIs('tournament.show') && request()->route()->tournament->id === $item['id']" wire:navigate>
+									<div class="flex justify-between items-center">
+										{{ $item['name'] }}
+										@php 
+											$tournament = Tournament::find($item['id']);
+										@endphp
+										<flux:badge class="" size="sm" color="{{ match ($tournament->status) {
+											TournamentStatus::OPEN => 'teal',
+											TournamentStatus::ONGOING => 'orange',
+											TournamentStatus::ENDED => 'zinc',
+										} }}">{{ Str::title($tournament->status->value) }}</flux:badge>
+									</div>
 								</flux:navlist.item>
 							@endforeach
 						</div>
