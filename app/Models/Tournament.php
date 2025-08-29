@@ -68,7 +68,7 @@ class Tournament extends Model
 		]);
 		$tournament->save();
 
-		dispatch(new SetupTournamentJob($tournament, $player_count));
+		dispatch(new SetupTournamentJob($tournament, $player_count, $simulate));
 		
 		return $tournament;
 	}

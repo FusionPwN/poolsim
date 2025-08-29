@@ -14,7 +14,7 @@ class SetupTournamentJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public Tournament $tournament, public int $playerCount)
+    public function __construct(public Tournament $tournament, public int $playerCount, public bool $simulate = false)
     {
         //
     }
@@ -46,5 +46,7 @@ class SetupTournamentJob implements ShouldQueue
 		foreach ($playerList as $player) {
 			$this->tournament->players()->attach($player->id, ['points' => 0]);
 		}
+
+		dispatch(new SetupTournamentGames($this->tournament, $this->simulate));
     }
 }

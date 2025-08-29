@@ -315,3 +315,42 @@ it('returns correct chance values from getChance', function () {
     expect($logic->getChance('potted_cue_ball'))->toBe(66);
     expect($logic->getChance('cue_ball_off_table'))->toBe(77);
 });
+
+it('creates round-robin games for a tournament', function () {
+	$tournament = Tournament::factory()->create();
+	$players = Player::factory()->count(4)->create();
+	$tournament->players()->attach($players);
+
+	$logic = new GameLogic();
+	$games = $logic->createGames($tournament);
+
+	// For 4 players, round-robin should create 6 games
+	expect($games)->toHaveCount(6);
+
+	// Each game should have correct tournament_id and valid player ids
+	foreach ($games as $game) {
+		expect($game->tournament_id)->toBe($tournament->id);
+		expect($players->pluck('id'))->toContain($game->player1_id);
+		expect($players->pluck('id'))->toContain($game->player2_id);
+		expect($game->player1_id)->not->toBe($game->player2_id);
+	}
+});
+
+it('prioritizes the first ball according to the priority argument and chance', function () {
+	$logic = new GameLogic();
+	$logic->resetBalls();
+
+	// Test 1000x if the solids balls are prioritized
+	for ($i = 0; $i < 1000; $i++) {
+		$balls = $logic->getShuffledBalls('solids', 2);
+		expect($logic->isBallSolids($balls[0]))->toBe(true);
+		expect($logic->isBallSolids($balls[1]))->toBe(true);
+	}
+
+	// test 1000x if the stripes balls are prioritized
+	for ($i = 0; $i < 1000; $i++) {
+		$balls = $logic->getShuffledBalls('stripes', 2);
+		expect($logic->isBallStripes($balls[0]))->toBe(true);
+		expect($logic->isBallStripes($balls[1]))->toBe(true);
+	}
+});

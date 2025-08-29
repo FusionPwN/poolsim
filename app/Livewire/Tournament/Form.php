@@ -27,7 +27,7 @@ class Form extends Component
     public function createTournament(): void
     {
         $validated = $this->validate();
-        Tournament::new($validated['name'], $validated['players'], $validated['simulation'] === 'automatic');
+		Tournament::new($validated['name'], $validated['players'], $this->simulation === 'automatic');
 		
         $this->reset(['name', 'players', 'simulation']);
         $this->dispatch('tournamentCreated');

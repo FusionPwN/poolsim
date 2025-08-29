@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\GameStatus;
 use App\Models\Game;
+use App\Models\Tournament;
 use Illuminate\Support\Collection;
 
 class GameLogic
@@ -640,5 +641,32 @@ class GameLogic
 	protected function getBreakPotChance(int $skill): int
 	{
 		return min(60 + intdiv($skill, 3), 99);
+	}
+
+	/**
+	 * Create games for a tournament in a round-robin format this way every player faces each other once.
+	 *
+	 * @param Tournament $tournament
+	 * @return Collection<Game>
+	 */
+	public function createGames(Tournament $tournament): Collection
+	{
+		$games = collect();
+		$players = $tournament->players()->pluck('players.id')->toArray();
+		$sequence = 1;
+
+		for ($i = 0; $i < count($players); $i++) {
+			for ($x = $i + 1; $x < count($players); $x++) {
+				$games->push(Game::create([
+					'tournament_id' => $tournament->id,
+					'player1_id' => $players[$i],
+					'player2_id' => $players[$x],
+					'sequence' => $sequence++,
+					'status' => GameStatus::SCHEDULED,
+				]));
+			}
+		}
+
+		return $games;
 	}
 }
