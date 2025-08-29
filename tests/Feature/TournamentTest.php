@@ -26,7 +26,7 @@ it('creates tournament and dispatches setup job', function () {
 	$name = 'Summer Pool Bash';
 	$playerCount = 8;
 
-	$tournament = Tournament::new($name, $playerCount);
+	$tournament = Tournament::new($name, $playerCount, false);
 
 	expect($tournament)->not->toBeNull();
 	expect($tournament->name)->toBe($name);

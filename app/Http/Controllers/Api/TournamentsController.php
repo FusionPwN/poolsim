@@ -37,7 +37,7 @@ class TournamentsController extends Controller
 	 */
 	public function store(Request $request): JsonResponse
 	{
-		$tournament = Tournament::new($request->input('name'), $request->input('players'));
+		$tournament = Tournament::new($request->input('name'), $request->input('players'), $request->input('simulate', true));
 
 		return response()->json($tournament, 201);
 	}

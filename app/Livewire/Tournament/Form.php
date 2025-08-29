@@ -11,6 +11,7 @@ class Form extends Component
 {
     public string $name = '';
     public int $players = 2;
+	public string $simulation = 'automatic';
 
 	/**
 	 * @return array{name: array<int, string>, players: array<int, string>}
@@ -26,10 +27,9 @@ class Form extends Component
     public function createTournament(): void
     {
         $validated = $this->validate();
-        Tournament::create([
-            'name' => $validated['name']
-        ]);
-        $this->reset(['name', 'players']);
+        Tournament::new($validated['name'], $validated['players'], $validated['simulation'] === 'automatic');
+		
+        $this->reset(['name', 'players', 'simulation']);
         $this->dispatch('tournamentCreated');
 
 		$this->modal('new-tournament')->close();

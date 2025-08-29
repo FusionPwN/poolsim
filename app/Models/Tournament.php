@@ -42,7 +42,21 @@ class Tournament extends Model
         return $this->hasMany(Game::class);
     }
 
-	public static function new(string $name, int $player_count): self
+	/**
+	 * Gets the tournament winner checking if tournament already ended
+	 * 
+	 * @return ?Player
+	 */
+	public function winner(): ?Player
+	{
+		if ($this->status !== TournamentStatus::ENDED) {
+			return null;
+		}
+
+		return $this->players()->wherePivot('points', '>', 0)->orderByPivot('points', 'desc')->first();
+	}
+
+	public static function new(string $name, int $player_count, bool $simulate): self
 	{
 		$tournament = new self();
 		$tournament->fill([

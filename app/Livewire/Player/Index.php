@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Livewire\Tournament;
+namespace App\Livewire\Player;
 
-use App\Models\Tournament;
+use App\Models\Player;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
-
 
 class Index extends Component
 {
@@ -22,19 +21,11 @@ class Index extends Component
 	public int $perPage = 25;
 	#[Url]
 	public string $search = '';
-	#[Url]
-	public string $status = '';
 
-	#[\Livewire\Attributes\On('tournamentCreated')]
-	public function tournamentCreated(): void
+	#[\Livewire\Attributes\On('playerCreated')]
+	public function playerCreated(): void
 	{
 		// This method is called when the event is received; triggers re-render
-	}
-
-	public function filterByStatus(string $status): void
-	{
-		$this->status = $status;
-		$this->resetPage();
 	}
 
 	public function updatedSearch(): void
@@ -53,17 +44,14 @@ class Index extends Component
 	}
 
 	/**
-	 * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<int, \App\Models\Tournament>
+	 * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<int, \App\Models\Player>
 	 */
 	#[Computed]
-	public function tournaments(): LengthAwarePaginator
+	public function players(): LengthAwarePaginator
 	{
-		return Tournament::query()
+		return Player::query()
 			->when($this->search, function ($query) {
 				$query->where('name', 'like', "%{$this->search}%");
-			})
-			->when($this->status, function ($query) {
-				$query->where('status', $this->status);
 			})
 			->tap(fn($query) => $this->sortBy ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
 			->paginate(
@@ -73,6 +61,6 @@ class Index extends Component
 
     public function render(): View
     {
-        return view('livewire.tournament.index');
+        return view('livewire.player.index');
     }
 }

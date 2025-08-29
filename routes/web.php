@@ -6,6 +6,8 @@ use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Tournament\Show as TournamentShow;
 use App\Livewire\Tournament\Index as TournamentIndex;
+use App\Livewire\Player\Index as PlayerIndex;
+use App\Livewire\Player\Show as PlayerShow;
 use Illuminate\Support\Facades\Route;
 
 Route::view('dashboard', 'dashboard')
@@ -24,6 +26,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', TournamentIndex::class)->name('tournaments.index');
 		Route::get('/{tournament}', TournamentShow::class)->name('tournament.show');
     });
+
+	Route::group(['prefix' => 'players'], function () {
+		Route::get('/', PlayerIndex::class)->name('players.index');
+		Route::get('/{player}', PlayerShow::class)->name('player.show');
+	});
 });
 
 /* 

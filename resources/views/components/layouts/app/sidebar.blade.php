@@ -43,7 +43,19 @@
 							@endforeach
 						</div>
 					@endif
-
+					<flux:navlist.item icon="user-group" :href="route('players.index')" :current="request()->routeIs('players.index')" wire:navigate>{{ __('Players') }}</flux:navlist.item>
+					@if ($players_history = session()->get('menu_history.player', []))
+						<div class="relative space-y-[2px] ps-7 data-open:block">
+							<div class="absolute inset-y-[3px] start-0 ms-4 w-px bg-zinc-200 dark:bg-white/30"></div>
+							@foreach ($players_history as $item)
+								<flux:navlist.item :href="route('player.show', $item['id'])" :current="request()->routeIs('player.show') && request()->route()->player->id === $item['id']" wire:navigate>
+									<div class="flex justify-between items-center">
+										{{ $item['name'] }}
+									</div>
+								</flux:navlist.item>
+							@endforeach
+						</div>
+					@endif
 				</flux:navlist.group>
 			</flux:navlist>
 

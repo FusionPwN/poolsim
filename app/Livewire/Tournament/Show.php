@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Tournament;
 
+use App\Models\Player;
 use App\Models\Tournament;
 use App\Traits\MenuHistory;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -17,10 +18,12 @@ class Show extends Component
 	public int $perPage = 25;
 
 	public Tournament $tournament;
+	public ?Player $winner = null;
 
 	public function mount(Tournament $tournament): void
 	{
 		$this->tournament = $tournament;
+		$this->winner = $tournament->winner();
 		$this->addToHistory('tournament', get_class($this->tournament), $this->tournament->id, $this->tournament->name);
 	}
 

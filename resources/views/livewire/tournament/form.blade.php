@@ -15,8 +15,12 @@
 				<flux:text class="mt-2">Fill in the details to create a new tournament.</flux:text>
 			</div>
 			<form wire:submit.prevent="createTournament" class="space-y-6">
-				<flux:input type="text" label="Name" placeholder="Tournament name" wire:model.live="name" />
-				<flux:input type="number" label="Number of players" placeholder="Number of players" min="2" step="1" wire:model.live="players" x-on:input="if ($el.value < 2) $el.value = 2; $el.value = $el.value.replace(/\D/, '')" />
+				<flux:input type="text" label="Name" placeholder="Tournament name" wire:model.defer="name" />
+				<flux:input type="number" label="Number of players" placeholder="Number of players" min="2" step="1" wire:model.defer="players" x-on:input="if ($el.value < 2) $el.value = 2; $el.value = $el.value.replace(/\D/, '')" />
+				<flux:radio.group wire:model.defer="simulation" label="Simulation" variant="segmented">
+					<flux:radio label="Automatic" value="automatic"/>
+					<flux:radio label="Manual" value="manual" />
+				</flux:radio.group>
 				<div class="flex">
 					<flux:spacer />
 					<flux:button type="submit" variant="primary">Save changes</flux:button>
