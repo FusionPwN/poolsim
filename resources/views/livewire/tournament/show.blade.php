@@ -117,9 +117,9 @@
 						@if ($game->isEnded())
 							<flux:callout.text>
 								<div class="flex items-center gap-2">
-									<span>Player X - Fouls: 3</span>
+									<span>{{ $game->player1->name }} - Fouls: {{ $game->player1->fouls }}</span>
 									<flux:separator vertical variant="subtle" />
-									<span>Player Y - Fouls: 3</span>
+									<span>{{ $game->player2->name }} - Fouls: {{ $game->player2->fouls }}</span>
 									<flux:separator vertical variant="subtle" />
 									<span>Player Y - Balls left: 3</span>
 								</div>
