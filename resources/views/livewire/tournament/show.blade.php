@@ -67,9 +67,9 @@
 							<x-flux.table.cell>
 								<flux:button href="{{ route('player.show', $player) }}" icon="user" size="xs" variant="ghost">{{ $player->name }}</flux:button>
 							</x-flux.table.cell>
-							<x-flux.table.cell class="text-center text-teal-500! dark:text-teal-400!">---</x-flux.table.cell>
-							<x-flux.table.cell class="text-center text-red-500! dark:text-red-400!">---</x-flux.table.cell>
-							<x-flux.table.cell class="text-center">---</x-flux.table.cell>
+							<x-flux.table.cell class="text-center text-teal-500! dark:text-teal-400!">{{ $player->pivot->wins }}</x-flux.table.cell>
+							<x-flux.table.cell class="text-center text-red-500! dark:text-red-400!">{{ $player->pivot->losses }}</x-flux.table.cell>
+							<x-flux.table.cell class="text-center">{{ $player->pivot->fouls }}</x-flux.table.cell>
 							<x-flux.table.cell class="text-center font-black">{{ $player->pivot->points }}</x-flux.table.cell>
 						</x-flux.table.row>
 					@empty

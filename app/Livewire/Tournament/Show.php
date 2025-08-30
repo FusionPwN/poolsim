@@ -12,6 +12,7 @@ use Livewire\Attributes\Computed;
 
 class Show extends Component
 {
+	use \Livewire\WithPagination;
 	use MenuHistory;
 
 	public string $sortBy = 'points';

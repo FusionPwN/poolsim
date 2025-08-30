@@ -148,8 +148,17 @@ it('fills game fields after simulation', function () {
     $tournament->refresh();
     $winnerPoints = $tournament->players()->find($winnerId)->getRelation('pivot')->points;
     $loserPoints = $tournament->players()->find($loserId)->getRelation('pivot')->points;
+    $winnerWins = $tournament->players()->find($winnerId)->getRelation('pivot')->wins;
+    $loserLosses = $tournament->players()->find($loserId)->getRelation('pivot')->losses;
+    $winnerFouls = $tournament->players()->find($winnerId)->getRelation('pivot')->fouls;
+    $loserFouls = $tournament->players()->find($loserId)->getRelation('pivot')->fouls;
+
     expect($winnerPoints)->toBeGreaterThanOrEqual($logic->points['win']);
     expect($loserPoints)->toBeGreaterThanOrEqual($logic->points['loss']);
+    expect($winnerWins)->toBeGreaterThanOrEqual(1);
+    expect($loserLosses)->toBeGreaterThanOrEqual(1);
+    expect($winnerFouls)->toBeGreaterThanOrEqual(0);
+    expect($loserFouls)->toBeGreaterThanOrEqual(0);
 });
 
 it('handles 8-ball pot on break', function () {

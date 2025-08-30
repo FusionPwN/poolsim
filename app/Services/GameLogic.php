@@ -618,12 +618,16 @@ class GameLogic
 		$winnerId = $this->winner;
 		$loserId = $this->loser;
 
-		// Add points for winner and loser
+		// Add points, wins, losses, fouls for winner and loser
 		$tournament->players()->updateExistingPivot($winnerId, [
-			'points' => DB::raw('points + ' . $this->points['win'])
+			'points' => DB::raw('points + ' . $this->points['win']),
+			'wins'   => DB::raw('wins + 1'),
+			'fouls'  => DB::raw('fouls + ' . ($simulationResults['fouls_by_player'][$winnerId] ?? 0)),
 		]);
 		$tournament->players()->updateExistingPivot($loserId, [
-			'points' => DB::raw('points + ' . $this->points['loss'])
+			'points'  => DB::raw('points + ' . $this->points['loss']),
+			'losses'  => DB::raw('losses + 1'),
+			'fouls'   => DB::raw('fouls + ' . ($simulationResults['fouls_by_player'][$loserId] ?? 0)),
 		]);
 	}
 
