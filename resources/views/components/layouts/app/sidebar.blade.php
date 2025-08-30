@@ -43,7 +43,7 @@
 							@endforeach
 						</div>
 					@endif
-					<flux:navlist.item icon="user-group" :href="route('players.index')" :current="request()->routeIs('players.index')" wire:navigate>{{ __('Players') }}</flux:navlist.item>
+					<flux:navlist.item icon="user-group" :href="route('player.index')" :current="request()->routeIs('players.index')" wire:navigate>{{ __('Players') }}</flux:navlist.item>
 					@if ($players_history = session()->get('menu_history.player', []))
 						<div class="relative space-y-[2px] ps-7 data-open:block">
 							<div class="absolute inset-y-[3px] start-0 ms-4 w-px bg-zinc-200 dark:bg-white/30"></div>
