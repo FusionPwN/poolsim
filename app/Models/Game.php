@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
 
+/**
+ * @property GameStatus $status
+ */
 class Game extends Model
 {
 	protected $fillable = ['tournament_id', 'winner_id', 'loser_id', 'balls_left', 'log', 'status'];
@@ -30,9 +33,9 @@ class Game extends Model
 	/**
 	 * Get all players involved in the game.
 	 *
-	 * @return \Illuminate\Support\Collection<Player>
+	 * @return \Illuminate\Support\Collection<int, \App\Models\Player>
 	 */
-	public function players(): Collection
+	public function players(): Collection /* @phpstan-return Collection<int, Player> */
 	{
 		return collect([$this->player1, $this->player2]);
 	}

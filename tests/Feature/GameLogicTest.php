@@ -146,8 +146,8 @@ it('fills game fields after simulation', function () {
     $winnerId = $logic->winner;
     $loserId = $logic->loser;
     $tournament->refresh();
-    $winnerPoints = $tournament->players()->find($winnerId)->pivot->points;
-    $loserPoints = $tournament->players()->find($loserId)->pivot->points;
+    $winnerPoints = $tournament->players()->find($winnerId)->getRelation('pivot')->points;
+    $loserPoints = $tournament->players()->find($loserId)->getRelation('pivot')->points;
     expect($winnerPoints)->toBeGreaterThanOrEqual($logic->points['win']);
     expect($loserPoints)->toBeGreaterThanOrEqual($logic->points['loss']);
 });

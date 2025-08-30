@@ -155,7 +155,7 @@ class GameLogic
 	 */
 	protected function setGameAsOngoing(): void
 	{
-		$this->game->status = GameStatus::ONGOING->value;
+		$this->game->status = GameStatus::ONGOING;
 		$this->game->save();
 	}
 
@@ -166,7 +166,7 @@ class GameLogic
 	 */
 	protected function setGameAsEnded(): void
 	{
-		$this->game->status = GameStatus::ENDED->value;
+		$this->game->status = GameStatus::ENDED;
 		$this->game->save();
 	}
 
@@ -675,7 +675,7 @@ class GameLogic
 	 * Create games for a tournament in a round-robin format this way every player faces each other once.
 	 *
 	 * @param Tournament $tournament
-	 * @return Collection<Game>
+	 * @return Collection<int, Game>
 	 */
 	public function createGames(Tournament $tournament): Collection
 	{
