@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Tournament;
 
+use App\Enums\TournamentStatus;
 use App\Models\Game;
 use App\Models\Player;
 use App\Models\Tournament;
@@ -41,11 +42,22 @@ class Show extends Component
 
 	public function simulateAll(): void
 	{
+		$this->tournament->status = TournamentStatus::ONGOING;
+		$this->tournament->save();
+		
 	}
 
 	public function simulate(Game $game): void
 	{
+		$this->tournament->status = TournamentStatus::ONGOING;
+		$this->tournament->save();
+
 		$game->simulate();
+	}
+
+	public function refresh(): void
+	{
+		
 	}
 
 	/**
