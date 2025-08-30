@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\GameStatus;
 use App\Models\Game;
 use App\Models\Tournament;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -187,13 +188,14 @@ class GameLogic
 	 * @param Game $game
 	 * @param \Illuminate\Support\Collection<int, \App\Models\Player> $players
 	 * @return array{
-     *     actions: array<int, array<string, mixed>>,
-     *     total_balls_left: int,
-     *     balls_left_by_type: array<string, int>,
-     *     total_actions: int,
-     *     total_fouls: int,
-     *     fouls_by_player: array<int, int>
-     * }
+ *     actions: array<int, array<string, mixed>>,
+ *     total_balls_left: int,
+ *     balls_left_by_type: array<string, int>,
+ *     total_actions: int,
+ *     total_fouls: int,
+ *     fouls_by_player: array<int, int>,
+ *     winning_ball_type: string|null
+ * }
 	 */
 	public function runSimulation(Game $game, Collection $players): array
 	{
@@ -271,6 +273,8 @@ class GameLogic
 		$remainingBalls = $this->getRemainingBalls();
 		$totalBallsLeft = count($remainingBalls['solids']) + count($remainingBalls['stripes']);
 
+		$winningBallType = Arr::where($this->playerData, fn($player) => $player['id'] === $this->winner)['group'];
+
 		$simulationResults = [
 			'actions' => $this->actions,
 			'total_balls_left' => $totalBallsLeft,
@@ -281,6 +285,7 @@ class GameLogic
 			'total_actions' => count($this->actions),
 			'total_fouls' => $totalFouls,
 			'fouls_by_player' => $foulCounts,
+			'winning_ball_type' => $winningBallType,
 		];
 
 		$this->saveGameResults($simulationResults);
@@ -588,6 +593,7 @@ class GameLogic
 	 * Save the game results with all simulation fields.
 	 *
 	 * @param array{
+	 *     winning_ball_type: string|null,
 	 *     actions: array<int, array<string, mixed>>,
 	 *     total_balls_left: int,
 	 *     balls_left_by_type: array<string, int>,
@@ -604,6 +610,7 @@ class GameLogic
 			'status'            => GameStatus::ENDED,
 			'winner_id'         => $this->winner,
 			'loser_id'          => $this->loser,
+			'winning_ball_type' => $simulationResults['winning_ball_type'],
 			'actions'           => $simulationResults['actions'],
 			'balls_left_solids' => $simulationResults['balls_left_by_type']['solids'],
 			'balls_left_stripes'=> $simulationResults['balls_left_by_type']['stripes'],

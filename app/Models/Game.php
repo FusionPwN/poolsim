@@ -124,4 +124,27 @@ class Game extends Model
 	{
 		app(GameLogic::class)->runSimulation($this, $this->players());
 	}
+
+	public function getWinningBallType(): ?string
+	{
+		return $this->winning_ball_type;
+	}
+
+	public function getLosingBallType(): ?string
+	{
+		if ($this->winning_ball_type === null) {
+			return null;
+		}
+
+		return $this->winning_ball_type === 'solids' ? 'stripes' : 'solids';
+	}
+
+	public function getLosingBallsLeft(): ?int
+	{
+		if ($this->winning_ball_type === null) {
+			return null;
+		}
+
+		return $this->{'balls_left_' . $this->getLosingBallType()};
+	}
 }

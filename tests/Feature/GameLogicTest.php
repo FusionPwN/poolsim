@@ -159,6 +159,10 @@ it('fills game fields after simulation', function () {
     expect($loserLosses)->toBeGreaterThanOrEqual(1);
     expect($winnerFouls)->toBeGreaterThanOrEqual(0);
     expect($loserFouls)->toBeGreaterThanOrEqual(0);
+
+    // Assert winning ball type
+    expect($results['winning_ball_type'])->not->toBeNull();
+    expect($game->winning_ball_type)->toBe($results['winning_ball_type']);
 });
 
 it('handles 8-ball pot on break', function () {
