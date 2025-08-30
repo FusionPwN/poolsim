@@ -8,12 +8,14 @@ use App\Jobs\SetupTournamentJob;
 use App\Models\Player;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use function Pest\Laravel\assertDatabaseHas;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
+	Event::fake();
 	config(['avatar.storage_path' => class_basename(__FILE__) . '/avatars/']);
 });
 afterEach(function () {

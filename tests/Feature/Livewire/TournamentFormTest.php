@@ -6,10 +6,12 @@ use App\Livewire\Tournament\Form;
 use App\Models\Tournament;
 use Livewire\Livewire;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 
 uses(RefreshDatabase::class);
 
 it('creates a tournament with valid data', function () {
+    Event::fake();
     \Illuminate\Support\Facades\Bus::fake();
 
     Livewire::test(Form::class)

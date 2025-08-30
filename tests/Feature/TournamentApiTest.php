@@ -8,11 +8,13 @@ use App\Http\Controllers\Api\TournamentsController;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
+	Event::fake();
 	config(['avatar.storage_path' => class_basename(__FILE__) . '/avatars/']);
 });
 afterEach(function () {

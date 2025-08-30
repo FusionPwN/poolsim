@@ -11,15 +11,14 @@ use Illuminate\Support\Facades\Storage;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-	config(['avatar.storage_path' => class_basename(__FILE__) . '/avatars/']);
+    Event::fake();
+    config(['avatar.storage_path' => class_basename(__FILE__) . '/avatars/']);
 });
 afterEach(function () {
 	Storage::disk('local')->deleteDirectory(class_basename(__FILE__));
 });
 
 it('triggers PlayerCreated event on player creation', function () {
-    Event::fake();
-
     Player::factory()->create([
         'name' => 'Test Player',
         'avatar_original' => 'original.png',

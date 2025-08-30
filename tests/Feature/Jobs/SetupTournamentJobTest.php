@@ -6,10 +6,13 @@ use App\Enums\TournamentStatus;
 use App\Models\{Player, Tournament};
 use App\Jobs\SetupTournamentJob;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 
 uses(RefreshDatabase::class);
 
 it('attaches only eligible players to tournament', function () {
+    Event::fake();
+    
     // Create 5 players, 2 in ongoing tournaments, 3 not
     $ongoingTournament = Tournament::factory()->create(['status' => TournamentStatus::ONGOING]);
     $otherTournament = Tournament::factory()->create(['status' => TournamentStatus::ENDED]);

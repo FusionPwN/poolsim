@@ -9,10 +9,12 @@ use App\Models\Tournament;
 use App\Services\GameLogic;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Event;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
+    Event::fake();
 	config(['avatar.storage_path' => class_basename(__FILE__) . '/avatars/']);
 });
 afterEach(function () {
