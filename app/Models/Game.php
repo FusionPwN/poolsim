@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use App\Enums\GameStatus;
+use App\Services\GameLogic;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 class Game extends Model
 {
@@ -24,6 +25,16 @@ class Game extends Model
 	public function tournament(): BelongsTo
 	{
 		return $this->belongsTo(Tournament::class);
+	}
+
+	/**
+	 * Get all players involved in the game.
+	 *
+	 * @return \Illuminate\Support\Collection<Player>
+	 */
+	public function players(): Collection
+	{
+		return collect([$this->player1, $this->player2]);
 	}
 
 	/**
@@ -72,5 +83,42 @@ class Game extends Model
 	public function player2Wins(): bool
 	{
 		return $this->winner_id === $this->player2_id;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function hasWinner(): bool
+	{
+		return $this->winner_id !== null;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isScheduled(): bool
+	{
+		return $this->status === GameStatus::SCHEDULED;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isOngoing(): bool
+	{
+		return $this->status === GameStatus::ONGOING;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isEnded(): bool
+	{
+		return $this->status === GameStatus::ENDED;
+	}
+
+	public function simulate(): void
+	{
+		app(GameLogic::class)->runSimulation($this, $this->players());
 	}
 }

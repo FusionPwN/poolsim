@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Tournament;
 
+use App\Models\Game;
 use App\Models\Player;
 use App\Models\Tournament;
 use App\Traits\MenuHistory;
@@ -35,6 +36,15 @@ class Show extends Component
 			$this->sortBy = $column;
 			$this->sortDirection = 'asc';
 		}
+	}
+
+	public function simulateAll(): void
+	{
+	}
+
+	public function simulate(Game $game): void
+	{
+		$game->simulate();
 	}
 
 	/**

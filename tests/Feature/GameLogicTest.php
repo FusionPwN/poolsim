@@ -141,6 +141,15 @@ it('fills game fields after simulation', function () {
     expect($game->total_actions)->toBe($results['total_actions']);
     expect($game->total_fouls)->toBe($results['total_fouls']);
     expect($game->fouls_player1 + $game->fouls_player2)->toBe($results['total_fouls']);
+
+    // Assert points updated on pivot table
+    $winnerId = $logic->winner;
+    $loserId = $logic->loser;
+    $tournament->refresh();
+    $winnerPoints = $tournament->players()->find($winnerId)->pivot->points;
+    $loserPoints = $tournament->players()->find($loserId)->pivot->points;
+    expect($winnerPoints)->toBeGreaterThanOrEqual($logic->points['win']);
+    expect($loserPoints)->toBeGreaterThanOrEqual($logic->points['loss']);
 });
 
 it('handles 8-ball pot on break', function () {

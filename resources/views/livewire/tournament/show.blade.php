@@ -2,7 +2,7 @@
     use App\Enums\TournamentStatus;
 @endphp
 
-<x-layouts.app.layout>
+<x-layouts.app.layout wire:poll.10s>
 	<x-slot name="heading">
 		{{ $tournament->name }} 
 		<flux:badge icon="{{ match ($tournament->status) {
@@ -65,7 +65,7 @@
 						<x-flux.table.row>
 							<x-flux.table.cell class="text-center font-black">{{ $loop->index + 1 }}</x-flux.table.cell>
 							<x-flux.table.cell>
-								<flux:button href="#" icon="user" size="xs" variant="ghost">{{ $player->name }}</flux:button>
+								<flux:button href="{{ route('player.show', $player) }}" icon="user" size="xs" variant="ghost">{{ $player->name }}</flux:button>
 							</x-flux.table.cell>
 							<x-flux.table.cell class="text-center text-teal-500! dark:text-teal-400!">---</x-flux.table.cell>
 							<x-flux.table.cell class="text-center text-red-500! dark:text-red-400!">---</x-flux.table.cell>
@@ -95,54 +95,66 @@
 				@endif
 			</flux:heading>
 
-			@if ($tournament->games->count() === 0 && $tournament->status === TournamentStatus::OPEN)
-				<div class="flex gap-4 items-center justify-center py-4 text-center text-sm text-zinc-500">
-					<flux:icon name="loading" class="text-zinc-400" />
-					Tournament hasn't started yet.
-				</div>
-			@elseif ($tournament->games->count() === 0 && $tournament->status === TournamentStatus::ONGOING)
-				<div class="flex gap-4 items-center justify-center py-4 text-center text-sm text-zinc-500">
-					<flux:icon name="loading" class="text-zinc-400" />
-					Generating matches...
-				</div>
-			@endif
-
-			{{-- <div class="flex flex-col gap-3">
-				@for ($i = 0; $i < 50; $i++)
+			<div class="flex flex-col gap-3">
+				@forelse ($tournament->games as $game)
 					<flux:callout inline>
 						<flux:callout.heading>
 							<div class="flex items-center justify-between w-full">
 								<div class="flex items-center gap-3">
-									<flux:badge icon="hand-thumb-up" color="amber">Player X</flux:badge>
-									vs
-									<flux:badge icon="hand-thumb-down" color="red">Player Y</flux:badge>
+									@if ($game->hasWinner())
+										<flux:badge icon="hand-thumb-up" color="amber">{{ $game->winner->name }}</flux:badge>
+										vs
+										<flux:badge icon="hand-thumb-down" color="red">{{ $game->loser->name }}</flux:badge>
+									@else
+										<flux:badge icon="user" color="teal">{{ $game->player1->name }}</flux:badge>
+										vs
+										<flux:badge icon="user" color="teal">{{ $game->player2->name }}</flux:badge>
+									@endif
 								</div>
 							</div>
 						</flux:callout.heading>
 
-						<flux:callout.text>
-							<div class="flex items-center gap-2">
-								<span>Player X - Fouls: 3</span>
-								<flux:separator vertical variant="subtle" />
-								<span>Player Y - Fouls: 3</span>
-								<flux:separator vertical variant="subtle" />
-								<span>Player Y - Balls left: 3</span>
-							</div>
-						</flux:callout.text>
+						@if ($game->isEnded())
+							<flux:callout.text>
+								<div class="flex items-center gap-2">
+									<span>Player X - Fouls: 3</span>
+									<flux:separator vertical variant="subtle" />
+									<span>Player Y - Fouls: 3</span>
+									<flux:separator vertical variant="subtle" />
+									<span>Player Y - Balls left: 3</span>
+								</div>
+							</flux:callout.text>
+						@endif
 
 						<x-slot name="actions" class="h-full">
-							<flux:button :loading="false" icon="loading" disabled>
-							</flux:button>
-							<flux:button :loading="false" icon="play-circle">
-								Simulate
-							</flux:button>
-							<flux:button :loading="false" icon="document-magnifying-glass" class="cursor-pointer">
-								Match details
-							</flux:button>
+							@if ($game->isScheduled())
+								<flux:button :loading="false" icon="play-circle" wire:click="simulate({{ $game->id }})">
+									Simulate
+								</flux:button>
+							@elseif ($game->isOngoing())
+								<flux:button :loading="false" icon="loading" disabled>
+								</flux:button>
+							@elseif ($game->isEnded())
+								<flux:button href="{{ route('tournament.games.show', [$tournament, $game]) }}" :loading="false" icon="document-magnifying-glass" class="cursor-pointer">
+									Match details
+								</flux:button>
+							@endif
 						</x-slot>
 					</flux:callout>
-				@endfor
-			</div> --}}
+				@empty
+					@if ($tournament->status === TournamentStatus::OPEN)
+						<div class="flex gap-4 items-center justify-center py-4 text-center text-sm text-zinc-500">
+							<flux:icon name="loading" class="text-zinc-400" />
+							Tournament hasn't started yet.
+						</div>
+					@elseif ($tournament->status === TournamentStatus::ONGOING)
+						<div class="flex gap-4 items-center justify-center py-4 text-center text-sm text-zinc-500">
+							<flux:icon name="loading" class="text-zinc-400" />
+							Generating matches...
+						</div>
+					@endif
+				@endforelse
+			</div>
 		</div>
 	</div>
 </x-layouts.app.layout>

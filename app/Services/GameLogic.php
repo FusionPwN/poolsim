@@ -6,11 +6,23 @@ use App\Enums\GameStatus;
 use App\Models\Game;
 use App\Models\Tournament;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class GameLogic
 {
 	/**
+	 * Configurable points.
+	 * 
+	 * @var array<string, int>
+	 */
+	public array $points = [
+		'win' => 3,
+		'loss' => 1
+	];
+
+	/**
 	 * Configurable chances for random events and fouls.
+	 * 
 	 * @var array<string, int>
 	 */
 	public array $chances = [
@@ -187,6 +199,8 @@ class GameLogic
 	{
 		$this->setPlayerData($players);
 		$this->setGame($game);
+
+		$this->setGameAsOngoing();
 
 		// coin toss to select who breaks
 		$this->breaker = rand(0, 1);
@@ -585,8 +599,9 @@ class GameLogic
 	 */
 	protected function saveGameResults(array $simulationResults): void
 	{
+
 		$this->game->update([
-			'status'			=> GameStatus::ENDED,
+			'status'            => GameStatus::ENDED,
 			'winner_id'         => $this->winner,
 			'loser_id'          => $this->loser,
 			'actions'           => $simulationResults['actions'],
@@ -596,6 +611,19 @@ class GameLogic
 			'total_fouls'       => $simulationResults['total_fouls'],
 			'fouls_player1'     => $simulationResults['fouls_by_player'][$this->winner === $this->game->player1_id ? $this->winner : $this->loser],
 			'fouls_player2'     => $simulationResults['fouls_by_player'][$this->winner === $this->game->player2_id ? $this->winner : $this->loser]
+		]);
+
+		// Update points on the tournament_player pivot table
+		$tournament = $this->game->tournament;
+		$winnerId = $this->winner;
+		$loserId = $this->loser;
+
+		// Add points for winner and loser
+		$tournament->players()->updateExistingPivot($winnerId, [
+			'points' => DB::raw('points + ' . $this->points['win'])
+		]);
+		$tournament->players()->updateExistingPivot($loserId, [
+			'points' => DB::raw('points + ' . $this->points['loss'])
 		]);
 	}
 

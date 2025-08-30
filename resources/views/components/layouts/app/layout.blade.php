@@ -3,7 +3,7 @@
     'subheading' => null,
 ])
 
-<div class="w-full">
+<div {{ $attributes->merge(['class' => 'w-full']) }} {{ $attributes }}>
 	@if ($heading)
 		<div class="relative mb-6 w-full">
 			<flux:heading size="xl" level="1" class="flex items-center gap-3">{{ $heading }}</flux:heading>
