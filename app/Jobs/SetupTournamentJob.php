@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Events\PlayersGenerated;
+use App\Events\TournamentUpdated;
 use App\Models\Player;
 use App\Models\Tournament;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -44,9 +46,10 @@ class SetupTournamentJob implements ShouldQueue
 
 		// attach players to tournament with 0 points
 		foreach ($playerList as $player) {
-			$this->tournament->players()->attach($player->id, ['points' => 0]);
+			$this->tournament->players()->attach($player->id);
 		}
 
+		broadcast(new PlayersGenerated($this->tournament));
 		dispatch(new SetupTournamentGames($this->tournament, $this->simulate));
     }
 }

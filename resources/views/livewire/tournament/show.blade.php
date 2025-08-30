@@ -2,7 +2,7 @@
     use App\Enums\TournamentStatus;
 @endphp
 
-<x-layouts.app.layout wire:poll.10s>
+<x-layouts.app.layout>
 	<x-slot name="heading">
 		{{ $tournament->name }} 
 		<flux:badge icon="{{ match ($tournament->status) {
@@ -97,7 +97,7 @@
 
 			<div class="flex flex-col gap-3">
 				@forelse ($tournament->games as $game)
-					<flux:callout inline>
+					<flux:callout inline wire:key="game-{{ $game->id }}">
 						<flux:callout.heading>
 							<div class="flex items-center justify-between w-full">
 								<div class="flex items-center gap-3">
@@ -117,11 +117,11 @@
 						@if ($game->isEnded())
 							<flux:callout.text>
 								<div class="flex items-center gap-2">
-									<span>{{ $game->player1->name }} - Fouls: {{ $game->player1->fouls }}</span>
+									<span>{{ $game->player1->name }} - Fouls: {{ $game->fouls_player1 }}</span>
 									<flux:separator vertical variant="subtle" />
-									<span>{{ $game->player2->name }} - Fouls: {{ $game->player2->fouls }}</span>
+									<span>{{ $game->player2->name }} - Fouls: {{ $game->fouls_player2 }}</span>
 									<flux:separator vertical variant="subtle" />
-									<span>Player Y - Balls left: 3</span>
+									<span>{{ $game->loser->name }} - Balls left: {{ $game->getLosingBallsLeft() }} ({{ $game->getLosingBallType() }})</span>
 								</div>
 							</flux:callout.text>
 						@endif
@@ -158,3 +158,13 @@
 		</div>
 	</div>
 </x-layouts.app.layout>
+
+@script
+	<script>
+		Echo.private('tournaments.{{ $tournament->id }}')
+			.listen('PlayersGenerated', (e) => {
+				console.log('hello')
+				$wire.refresh();
+			});
+	</script>
+@endscript

@@ -1,14 +1,25 @@
 <?php
-
 declare(strict_types=1);
 
 use App\Enums\TournamentStatus;
+use App\Events\PlayersGenerated;
 use App\Models\{Player, Tournament};
 use App\Jobs\SetupTournamentJob;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 
 uses(RefreshDatabase::class);
+
+it('broadcasts PlayersGenerated event when job runs', function () {
+    Event::fake();
+
+    $tournament = Tournament::factory()->create(['status' => TournamentStatus::ONGOING]);
+    (new SetupTournamentJob($tournament, 2))->handle();
+
+    Event::assertDispatched(PlayersGenerated::class, function ($event) use ($tournament) {
+        return $event->tournament->id === $tournament->id;
+    });
+});
 
 it('attaches only eligible players to tournament', function () {
     Event::fake();
