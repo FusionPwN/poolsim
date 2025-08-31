@@ -106,6 +106,7 @@ it('runs simulation and sets winner/loser', function () {
     $logic = new GameLogic();
 	$players = Player::factory()->count(2)->create();
 	$tournament = Tournament::create(['name' => 'Test Tournament', 'status' => TournamentStatus::OPEN]);
+    $tournament->players()->attach($players);
 	$game = Game::create([
 		'player1_id' => $players[0]->id,
 		'player2_id' => $players[1]->id,
@@ -127,6 +128,7 @@ it('fills game fields after simulation', function () {
     $logic = new GameLogic();
     $players = Player::factory()->count(2)->create();
     $tournament = Tournament::create(['name' => 'Test Tournament', 'status' => TournamentStatus::OPEN]);
+    $tournament->players()->attach($players);
     $game = Game::create([
         'player1_id' => $players[0]->id,
         'player2_id' => $players[1]->id,
@@ -146,6 +148,7 @@ it('fills game fields after simulation', function () {
     $winnerId = $logic->winner;
     $loserId = $logic->loser;
     $tournament->refresh();
+
     $winnerPoints = $tournament->players()->find($winnerId)->getRelation('pivot')->points;
     $loserPoints = $tournament->players()->find($loserId)->getRelation('pivot')->points;
     $winnerWins = $tournament->players()->find($winnerId)->getRelation('pivot')->wins;

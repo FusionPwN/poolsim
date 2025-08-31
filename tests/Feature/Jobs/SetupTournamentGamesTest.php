@@ -30,4 +30,8 @@ it('creates games for a tournament when the job runs', function () {
         expect($players->pluck('id'))->toContain($p2);
         expect($p1)->not->toBe($p2);
     }
+
+    Event::assertDispatched(App\Events\GamesGenerated::class, function ($event) use ($tournament) {
+        return $event->tournament->is($tournament);
+    });
 });

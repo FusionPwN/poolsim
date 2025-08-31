@@ -50,6 +50,12 @@ class SetupTournamentJob implements ShouldQueue
 		}
 
 		broadcast(new PlayersGenerated($this->tournament));
-		dispatch(new SetupTournamentGames($this->tournament, $this->simulate));
+
+		if (app()->runningUnitTests()) {
+			dispatch(new SetupTournamentGames($this->tournament, $this->simulate));
+		} else {
+			dispatch(new SetupTournamentGames($this->tournament, $this->simulate))
+				->delay(now()->addSeconds(5));
+		}
     }
 }

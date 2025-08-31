@@ -6,13 +6,13 @@ use App\Livewire\Tournament\Form;
 use App\Models\Tournament;
 use Livewire\Livewire;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Event;
 
 uses(RefreshDatabase::class);
 
 it('creates a tournament with valid data', function () {
-    Event::fake();
-    \Illuminate\Support\Facades\Bus::fake();
+    Bus::fake();
 
     Livewire::test(Form::class)
         ->set('name', 'Test Tournament')
@@ -24,7 +24,7 @@ it('creates a tournament with valid data', function () {
     $tournament = Tournament::where('name', 'Test Tournament')->first();
     expect($tournament)->not->toBeNull();
     expect($tournament->name)->toBe('Test Tournament');
-    \Illuminate\Support\Facades\Bus::assertDispatched(App\Jobs\SetupTournamentJob::class, function ($job) use ($tournament) {
+    Bus::assertDispatched(App\Jobs\SetupTournamentJob::class, function ($job) use ($tournament) {
         return $job->tournament->is($tournament) && $job->playerCount === 4;
     });
 });

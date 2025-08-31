@@ -69,8 +69,13 @@ class Tournament extends Model
 		]);
 		$tournament->save();
 
-		dispatch(new SetupTournamentJob($tournament, $player_count, $simulate));
-		
+		if (app()->runningUnitTests()) {
+			dispatch(new SetupTournamentJob($tournament, $player_count, $simulate));
+		} else {
+			dispatch(new SetupTournamentJob($tournament, $player_count, $simulate))
+				->delay(now()->addSeconds(10));
+		}
+
 		return $tournament;
 	}
 }

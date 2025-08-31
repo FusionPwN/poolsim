@@ -273,7 +273,8 @@ class GameLogic
 		$remainingBalls = $this->getRemainingBalls();
 		$totalBallsLeft = count($remainingBalls['solids']) + count($remainingBalls['stripes']);
 
-		$winningBallType = Arr::where($this->playerData, fn($player) => $player['id'] === $this->winner)['group'];
+		$winnerData = collect($this->playerData)->firstWhere('id', $this->winner);
+		$winningBallType = $winnerData['group'];
 
 		$simulationResults = [
 			'actions' => $this->actions,
