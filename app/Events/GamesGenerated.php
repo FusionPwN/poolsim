@@ -22,7 +22,7 @@ class GamesGenerated implements ShouldBroadcast
      * @param Tournament $tournament
      * @param Collection<int, \App\Models\Game> $games
      */
-    public function __construct(public Tournament $tournament, public Collection $games)
+    public function __construct(public Tournament $tournament)
     {
         //
     }

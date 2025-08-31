@@ -45,6 +45,13 @@
 
 @script
     <script>
-
+        Echo.private('games.{{ $game->id }}')
+            .listen('GameStarted', (e) => {
+				$wire.refresh();
+			})
+            .listen('GameFinished', (e) => {
+				$wire.refresh();
+			});
+        
     </script>
 @endscript

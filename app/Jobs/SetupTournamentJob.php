@@ -7,18 +7,26 @@ use App\Events\TournamentUpdated;
 use App\Models\Player;
 use App\Models\Tournament;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Foundation\Queue\Queueable;
 
-class SetupTournamentJob implements ShouldQueue
+class SetupTournamentJob implements ShouldQueue, ShouldBeUnique
 {
     use Queueable;
+
+    public string $uniqueId;
 
     /**
      * Create a new job instance.
      */
     public function __construct(public Tournament $tournament, public int $playerCount, public bool $simulate = false)
     {
-        //
+        $this->uniqueId = 'setup-tournament-' . $tournament->id;
+    }
+
+    public function uniqueId(): string
+    {
+        return $this->uniqueId;
     }
 
     /**
@@ -45,9 +53,7 @@ class SetupTournamentJob implements ShouldQueue
 		$playerList = $existingPlayers->merge($newPlayers);
 
 		// attach players to tournament with 0 points
-		foreach ($playerList as $player) {
-			$this->tournament->players()->attach($player->id);
-		}
+		$this->tournament->players()->attach($playerList);
 
 		broadcast(new PlayersGenerated($this->tournament));
 

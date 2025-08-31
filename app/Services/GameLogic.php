@@ -695,18 +695,42 @@ class GameLogic
 		$players = $tournament->players()->pluck('players.id')->toArray();
 		$sequence = 1;
 
+		$gamesData = [];
 		for ($i = 0; $i < count($players); $i++) {
 			for ($x = $i + 1; $x < count($players); $x++) {
-				$games->push(Game::create([
-					'tournament_id' => $tournament->id,
-					'player1_id' => $players[$i],
-					'player2_id' => $players[$x],
-					'sequence' => $sequence++,
-					'status' => GameStatus::SCHEDULED,
-				]));
+				$player1 = $players[$i];
+				$player2 = $players[$x];
+
+				// Optionally check for existing games
+				$exists = Game::where('tournament_id', $tournament->id)
+					->where('player1_id', $player1)
+					->where('player2_id', $player2)
+					->exists();
+
+				if (!$exists) {
+					$gamesData[] = [
+						'tournament_id' => $tournament->id,
+						'player1_id' => $player1,
+						'player2_id' => $player2,
+						'sequence' => $sequence++,
+						'status' => GameStatus::SCHEDULED,
+						'created_at' => now(),
+						'updated_at' => now(),
+					];
+				}
 			}
 		}
 
-		return $games;
+		DB::beginTransaction();
+		try {
+			Game::insert($gamesData);
+			DB::commit();
+		} catch (\Illuminate\Database\QueryException $e) {
+			// Duplicate key exception, rollback and continue
+			DB::rollBack();
+		}
+
+		// Return the games for this tournament
+		return $tournament->games()->get();
 	}
 }

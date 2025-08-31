@@ -25,7 +25,9 @@ it('creates a tournament with valid data', function () {
     expect($tournament)->not->toBeNull();
     expect($tournament->name)->toBe('Test Tournament');
     Bus::assertDispatched(App\Jobs\SetupTournamentJob::class, function ($job) use ($tournament) {
-        return $job->tournament->is($tournament) && $job->playerCount === 4;
+        return $job->tournament->is($tournament)
+            && $job->playerCount === 4
+            && $job->queue === 'setup-tournament';
     });
 });
 

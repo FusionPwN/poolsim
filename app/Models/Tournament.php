@@ -70,9 +70,10 @@ class Tournament extends Model
 		$tournament->save();
 
 		if (app()->runningUnitTests()) {
-			dispatch(new SetupTournamentJob($tournament, $player_count, $simulate));
+			dispatch(new SetupTournamentJob($tournament, $player_count, $simulate))->onQueue('setup-tournament');
 		} else {
 			dispatch(new SetupTournamentJob($tournament, $player_count, $simulate))
+				->onQueue('setup-tournament')
 				->delay(now()->addSeconds(10));
 		}
 
