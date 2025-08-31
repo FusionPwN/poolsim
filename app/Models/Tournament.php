@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\TournamentStatus;
+use App\Events\TournamentUpdated;
 use App\Jobs\SetupTournamentJob;
 use Database\Factories\TournamentFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,6 +22,15 @@ class Tournament extends Model
 	protected static string $factory = TournamentFactory::class;
 
     protected $fillable = ['name', 'status'];
+
+	protected static function booted(): void
+	{
+		static::updating(function ($model) {
+			if ($model->isDirty('status')) {
+				broadcast(new TournamentUpdated($model));
+			}
+		});
+	}
 
 	protected function casts(): array
 	{
@@ -78,5 +88,35 @@ class Tournament extends Model
 		}
 
 		return $tournament;
+	}
+
+	public function setAsOpen(): void
+	{
+		$this->update(['status' => TournamentStatus::OPEN]);
+	}
+
+	public function setAsOngoing(): void
+	{
+		$this->update(['status' => TournamentStatus::ONGOING]);
+	}
+
+	public function setAsEnded(): void
+	{
+		$this->update(['status' => TournamentStatus::ENDED]);
+	}
+
+	public function isOpen(): bool
+	{
+		return $this->status === TournamentStatus::OPEN;
+	}
+
+	public function isOngoing(): bool
+	{
+		return $this->status === TournamentStatus::ONGOING;
+	}
+
+	public function isEnded(): bool
+	{
+		return $this->status === TournamentStatus::ENDED;
 	}
 }

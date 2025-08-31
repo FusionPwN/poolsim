@@ -20,8 +20,8 @@
 
 @script
     <script>
-        Echo.private('tournament.{{ $tournament->id }}')
-            .listen('TournamentUpdated', (event) => {
+        Echo.private('tournaments.{{ $tournament->id }}')
+            .listen('TournamentUpdated', (e) => {
                 $wire.refresh();
             });
     </script>

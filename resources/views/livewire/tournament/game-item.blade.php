@@ -52,6 +52,5 @@
             .listen('GameFinished', (e) => {
 				$wire.refresh();
 			});
-        
     </script>
 @endscript

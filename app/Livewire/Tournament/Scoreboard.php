@@ -10,8 +10,6 @@ class Scoreboard extends Component
 {
     use \Livewire\WithPagination;
 
-    public string $sortBy = 'points';
-	public string $sortDirection = 'desc';
 	public int $perPage = 25;
 
     public Tournament $tournament;
@@ -24,16 +22,6 @@ class Scoreboard extends Component
     public function refresh(): void
     {}
 
-    public function sort(string $column): void
-    {
-        if ($this->sortBy === $column) {
-            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->sortBy = $column;
-            $this->sortDirection = 'asc';
-        }
-    }
-
     /**
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<int, \App\Models\Player&object{pivot: \Illuminate\Database\Eloquent\Relations\Pivot}>
      */
@@ -41,13 +29,15 @@ class Scoreboard extends Component
     public function players(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return $this->tournament->players()
-            ->tap(fn($query) => $this->sortBy ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
+            ->orderByDesc('pivot_points')
+            ->orderByDesc('pivot_wins')
+            ->orderBy('pivot_fouls')
             ->paginate(
                 perPage: $this->perPage,
             );
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View
     {
         return view('livewire.tournament.scoreboard');
     }

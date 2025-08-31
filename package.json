@@ -4,7 +4,7 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "serve:all": "concurrently \"php artisan reverb:start\" \"php artisan queue:work --queue=setup-tournament\" \"php artisan queue:work\" \"php artisan queue:work\""
+    "serve:all": "concurrently \"php artisan reverb:start\" \"php artisan queue:work --queue=setup-tournament\" \"php artisan queue:work --queue=process-avatar\" \"php artisan queue:work --queue=process-avatar\" \"php artisan queue:work --queue=game-simulation\" \"php artisan queue:work\" \"php artisan queue:work\""
     },
     "dependencies": {
         "@tailwindcss/vite": "^4.1.11",

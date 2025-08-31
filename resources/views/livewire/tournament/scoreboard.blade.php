@@ -40,6 +40,9 @@
 @script
     <script>
         Echo.private('tournaments.{{ $tournament->id }}')
+            .listen('PlayersGenerated', (e) => {
+				$wire.refresh();
+			})
             .listen('GameFinished', (e) => {
 				$wire.refresh();
 			});

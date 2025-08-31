@@ -7,10 +7,12 @@ use App\Services\GameLogic;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @property GameStatus $status
  */
+
 class Game extends Model
 {
 	protected $fillable = ['tournament_id', 'winner_id', 'loser_id', 'balls_left', 'log', 'status'];
@@ -146,5 +148,35 @@ class Game extends Model
 		}
 
 		return $this->{'balls_left_' . $this->getLosingBallType()};
+	}
+
+	/**
+	 * Scope a query to only include scheduled games.
+	 * @param Builder<Game> $query
+	 * @return Builder<Game>
+	 */
+	public function scopeScheduled(Builder $query): Builder
+	{
+		return $query->where('status', GameStatus::SCHEDULED);
+	}
+
+	/**
+	 * Scope a query to only include ongoing games.
+	 * @param Builder<Game> $query
+	 * @return Builder<Game>
+	 */
+	public function scopeOngoing(Builder $query): Builder
+	{
+		return $query->where('status', GameStatus::ONGOING);
+	}
+
+	/**
+	 * Scope a query to only include ended games.
+	 * @param Builder<Game> $query
+	 * @return Builder<Game>
+	 */
+	public function scopeEnded(Builder $query): Builder
+	{
+		return $query->where('status', GameStatus::ENDED);
 	}
 }

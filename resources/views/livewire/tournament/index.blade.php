@@ -74,3 +74,12 @@
 		</x-flux.table.table>
 	</div>
 </x-layouts.app.layout>
+
+@script
+	<script>
+		Echo.private('tournaments')
+			.listen('TournamentUpdated', (e) => {
+				$wire.refresh();
+			});
+	</script>
+@endscript

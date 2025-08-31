@@ -18,7 +18,7 @@ class GameStarted implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public function __construct(public Game $game)
+    public function __construct(public int $tournament_id, public int $game_id)
     {
         //
     }
@@ -31,8 +31,8 @@ class GameStarted implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('tournaments.' . $this->game->tournament->id),
-            new PrivateChannel('games.' . $this->game->id),
+            new PrivateChannel('tournaments.' . $this->tournament_id),
+            new PrivateChannel('games.' . $this->game_id),
         ];
     }
 }

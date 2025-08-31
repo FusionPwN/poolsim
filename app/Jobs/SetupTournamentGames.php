@@ -31,12 +31,20 @@ class SetupTournamentGames implements ShouldQueue
         try {
             $logic = app(GameLogic::class);
             $games = $logic->createGames($this->tournament);
-            broadcast(new GamesGenerated($this->tournament, $games));
+            #broadcast(new GamesGenerated($this->tournament));
+
+            if (!$this->tournament->isOngoing()) {
+                $this->tournament->setAsOngoing();
+            }
 
             if ($this->simulate && $games->count() > 0) {
-                $batch = Bus::batch(
-                    $games->map(fn($game) => new GameSimulationJob($game))->toArray()
-                )->dispatch();
+                foreach ($games as $game) {
+                    $job = new GameSimulationJob($game);
+                    /* if (!app()->runningUnitTests()) {
+                        $job->delay = now()->addSeconds(10);
+                    } */
+                    dispatch($job->onQueue('game-simulation'));
+                }
             }
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() === '23000') { // Duplicate key error code

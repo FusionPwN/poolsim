@@ -53,8 +53,7 @@
 			<flux:heading size="lg" level="1" class="flex items-center gap-3 mb-5">
 				Games
 				@if ($tournament->games->count() > 0 && $tournament->status === TournamentStatus::ONGOING)
-					<flux:badge icon="loading" size="sm" color="teal">Simulating (x/{{ $tournament->games->count() }})</flux:badge>
-					<flux:badge size="sm" color="green">Simulated (x/{{ $tournament->games->count() }})</flux:badge>
+					@livewire('tournament.game-simulation-status', ['tournament' => $tournament])
 				@endif
 			</flux:heading>
 
@@ -83,6 +82,12 @@
 	<script>
 		Echo.private('tournaments.{{ $tournament->id }}')
 			.listen('PlayersGenerated', (e) => {
+				$wire.refresh();
+			})
+			.listen('GamesGenerated', (e) => {
+				$wire.refresh();
+			})
+			.listen('TournamentUpdated', (e) => {
 				$wire.refresh();
 			});
 	</script>
