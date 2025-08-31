@@ -1,7 +1,7 @@
 @php
 	use App\Models\Tournament;
-	use App\Enums\TournamentStatus;
 @endphp
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 	<head>
@@ -23,23 +23,16 @@
 						<div class="relative space-y-[2px] ps-7 data-open:block">
 							<div class="absolute inset-y-[3px] start-0 ms-4 w-px bg-zinc-200 dark:bg-white/30"></div>
 							@foreach ($tournaments_history as $item)
-								<flux:navlist.item :href="route('tournament.show', $item['id'])" :current="request()->routeIs('tournament.show') && request()->route()->tournament->id === $item['id']" wire:navigate>
-									<div class="flex justify-between items-center">
-										{{ $item['name'] }}
-										@php 
-											$tournament = Tournament::find($item['id']);
-										@endphp
-										<flux:badge icon="{{ match ($tournament->status) {
-											TournamentStatus::OPEN => 'check-circle',
-											TournamentStatus::ONGOING => 'loading',
-											TournamentStatus::ENDED => 'x-circle',
-										} }}" class="" size="sm" color="{{ match ($tournament->status) {
-											TournamentStatus::OPEN => 'teal',
-											TournamentStatus::ONGOING => 'orange',
-											TournamentStatus::ENDED => 'zinc',
-										} }}">{{ Str::title($tournament->status->value) }}</flux:badge>
-									</div>
-								</flux:navlist.item>
+								@if ($tournament = Tournament::find($item['id']))
+									@livewire('tournament-menu-item', ['tournament' => $tournament])
+								@else
+									@php
+                                        // Remove not found tournament from session
+                                        $tournaments_history = session()->get('menu_history.tournament', []);
+                                        unset($tournaments_history[$index]);
+                                        session()->put('menu_history.tournament', $tournaments_history);
+                                    @endphp
+								@endif
 							@endforeach
 						</div>
 					@endif
@@ -50,7 +43,7 @@
 							@foreach ($players_history as $item)
 								<flux:navlist.item :href="route('player.show', $item['id'])" :current="request()->routeIs('player.show') && request()->route()->player->id === $item['id']" wire:navigate>
 									<div class="flex justify-between items-center">
-										{{ $item['name'] }}
+										{{ Str::limit($item['name'], 10) }}
 									</div>
 								</flux:navlist.item>
 							@endforeach
