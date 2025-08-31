@@ -35,7 +35,7 @@ class Form extends Component
 		$this->modal('new-tournament')->close();
     }
 
-    public function render(): \Illuminate\View\View
+    public function render(): \Illuminate\Contracts\View\View
     {
         return view('livewire.tournament.form');
     }

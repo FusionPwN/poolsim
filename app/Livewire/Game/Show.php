@@ -6,7 +6,7 @@ use Livewire\Component;
 
 class Show extends Component
 {
-    public function render(): \Illuminate\View\View
+    public function render(): \Illuminate\Contracts\View\View
     {
         return view('livewire.game.show');
     }

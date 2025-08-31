@@ -18,7 +18,7 @@ class Show extends Component
 		$this->addToHistory('player', get_class($this->player), $this->player->id, $this->player->name);
 	}
 
-    public function render(): \Illuminate\View\View
+    public function render(): \Illuminate\Contracts\View\View
     {
         return view('livewire.player.show');
     }

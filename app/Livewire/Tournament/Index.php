@@ -4,7 +4,6 @@ namespace App\Livewire\Tournament;
 
 use App\Models\Tournament;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Contracts\View\View;
 use Livewire\Component;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
@@ -71,7 +70,7 @@ class Index extends Component
 			);
 	}
 
-    public function render(): View
+    public function render(): \Illuminate\Contracts\View\View
     {
         return view('livewire.tournament.index');
     }

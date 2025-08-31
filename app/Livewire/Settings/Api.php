@@ -17,7 +17,7 @@ class Api extends Component
 		$this->apiToken = $token->plainTextToken;
 	}
 
-    public function render(): \Illuminate\View\View
+    public function render(): \Illuminate\Contracts\View\View
     {
         return view('livewire.settings.api');
     }

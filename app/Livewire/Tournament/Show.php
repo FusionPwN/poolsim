@@ -47,18 +47,8 @@ class Show extends Component
 		
 	}
 
-	public function simulate(Game $game): void
-	{
-		$this->tournament->status = TournamentStatus::ONGOING;
-		$this->tournament->save();
-
-		$game->simulate();
-	}
-
 	public function refresh(): void
-	{
-		
-	}
+	{}
 
 	/**
 	 * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<int, \App\Models\Player&object{pivot: \Illuminate\Database\Eloquent\Relations\Pivot}>
@@ -73,7 +63,7 @@ class Show extends Component
 			);
 	}
 
-	public function render(): \Illuminate\View\View
+	public function render(): \Illuminate\Contracts\View\View
     {
         return view('livewire.tournament.show');
     }
