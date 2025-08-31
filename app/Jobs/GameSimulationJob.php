@@ -24,6 +24,8 @@ class GameSimulationJob implements ShouldQueue
     public function handle(): void
     {
         $logic = app(GameLogic::class);
+
+        $this->game->setAsOngoing();
         broadcast(new GameStarted($this->game->tournament_id, $this->game->id));
 
         if (! $this->skipSleep) {
@@ -31,9 +33,11 @@ class GameSimulationJob implements ShouldQueue
         }
         
         $logic->runSimulation($this->game, $this->game->players());
+        $this->game->setAsEnded();
         broadcast(new GameFinished($this->game->tournament_id, $this->game->id));
 
         if ($this->game->tournament->games()->ended()->count() === $this->game->tournament->games()->count()) {
+            
             if (app()->runningUnitTests()) {
                 dispatch(new CheckTournamentWinnerJob($this->game->tournament))->onQueue('setup-tournament');
             } else {

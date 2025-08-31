@@ -149,27 +149,6 @@ class GameLogic
 		$this->game = $game;
 	}
 
-	/**
-	 * Set the game status as ongoing.
-	 *
-	 * @return void
-	 */
-	protected function setGameAsOngoing(): void
-	{
-		$this->game->status = GameStatus::ONGOING;
-		$this->game->save();
-	}
-
-	/**
-	 * Set the game status as ended.
-	 *
-	 * @return void
-	 */
-	protected function setGameAsEnded(): void
-	{
-		$this->game->status = GameStatus::ENDED;
-		$this->game->save();
-	}
 
     /**
      * Get the configured chance value for a given event key.
@@ -201,8 +180,6 @@ class GameLogic
 	{
 		$this->setPlayerData($players);
 		$this->setGame($game);
-
-		$this->setGameAsOngoing();
 
 		// coin toss to select who breaks
 		$this->breaker = rand(0, 1);
@@ -608,7 +585,6 @@ class GameLogic
 	{
 
 		$this->game->update([
-			'status'            => GameStatus::ENDED,
 			'winner_id'         => $this->winner,
 			'loser_id'          => $this->loser,
 			'winning_ball_type' => $simulationResults['winning_ball_type'],

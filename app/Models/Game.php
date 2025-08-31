@@ -15,12 +15,14 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Game extends Model
 {
-	protected $fillable = ['tournament_id', 'winner_id', 'loser_id', 'balls_left', 'log', 'status'];
+	protected $fillable = ['tournament_id', 'winner_id', 'loser_id', 'balls_left', 'log', 'status', 'started_at', 'ended_at'];
 
 	protected function casts(): array
 	{
 		return [
-			'status' 	=> GameStatus::class,
+			'status'     => GameStatus::class,
+			'started_at' => 'datetime',
+			'ended_at'   => 'datetime',
 		];
 	}
 
@@ -120,6 +122,21 @@ class Game extends Model
 	public function isEnded(): bool
 	{
 		return $this->status === GameStatus::ENDED;
+	}
+
+	public function setAsScheduled(): void
+	{
+		$this->update(['status' => GameStatus::SCHEDULED]);
+	}
+
+	public function setAsOngoing(): void
+	{
+		$this->update(['status' => GameStatus::ONGOING, 'started_at' => now()]);
+	}
+
+	public function setAsEnded(): void
+	{
+		$this->update(['status' => GameStatus::ENDED, 'ended_at' => now()]);
 	}
 
 	public function simulate(): void

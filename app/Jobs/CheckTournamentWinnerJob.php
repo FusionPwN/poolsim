@@ -34,7 +34,7 @@ class CheckTournamentWinnerJob implements ShouldQueue
             $this->tournament->winner_id = $winner->id;
             $this->tournament->setAsEnded();
 
-            broadcast(new TournamentEnded($this->tournament));
+            #broadcast(new TournamentEnded($this->tournament));
         }
     }
 }

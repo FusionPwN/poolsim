@@ -52,14 +52,14 @@
 		<div class="w-full">
 			<flux:heading size="lg" level="1" class="flex items-center gap-3 mb-5">
 				Games
-				@if ($tournament->games->count() > 0 && $tournament->status === TournamentStatus::ONGOING)
+				@if ($tournament->games->count() > 0)
 					@livewire('tournament.game-simulation-status', ['tournament' => $tournament])
 				@endif
 			</flux:heading>
 
 			<div class="flex flex-col gap-3">
 				@forelse ($tournament->games as $game)
-					@livewire('tournament.game-item', ['game' => $game])
+					@livewire('tournament.game-item', ['game' => $game], key('game-' . $game->id))
 				@empty
 					@if ($tournament->status === TournamentStatus::OPEN)
 						<div class="flex gap-4 items-center justify-center py-4 text-center text-sm text-zinc-500">
