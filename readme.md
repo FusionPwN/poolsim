@@ -1,3 +1,20 @@
+RUNNING THE PROJECT
+- Clone
+- Run composer update
+- Run npm install
+- Run php artisan migrate
+- Run npm run build
+- Run npm run serve:all (this will initialize all the queue workers needed and the reverb instance)
+- Project is now ready
+
+KEY FEATURES
+- Game simulation 
+- Simulates actions within a game and saves them
+- Real time updates even when running jobs
+- API access
+- User API key generation in settings
+- Run simulations automaticly or run them manualy
+
 GAMELOGIC PARAMETERS
 
 - There should be 16 balls in total, comprising a white cue ball, seven striped balls, seven solid balls, and one black ball (8 ball)
