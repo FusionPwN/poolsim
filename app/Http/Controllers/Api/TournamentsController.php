@@ -1,4 +1,4 @@
-	<?php
+<?php
 
 namespace App\Http\Controllers\Api;
 
@@ -76,7 +76,7 @@ class TournamentsController extends Controller
 	public function players(Request $request, Tournament $tournament): JsonResponse
 	{
 		$players = $tournament->players()->get();
-		
+
 		return response()->json($players);
 	}
 }
