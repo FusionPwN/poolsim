@@ -782,8 +782,12 @@ class GameLogic
 				$actionDescriptions[] = "Break shot to start the turn.";
 			}
 			if (!empty($action['pots'])) {
-				$balls = implode(', ', $action['pots']);
-				$actionDescriptions[] = "Potted ball(s): $balls.";
+				$balls = [];
+				foreach ($action['pots'] as $ballNum) {
+					$type = $this->getBallTypeFromNumber($ballNum);
+					$balls[] = "$ballNum $type";
+				}
+				$actionDescriptions[] = "Potted ball(s): " . implode(', ', $balls) . ".";
 			}
 			if (!empty($action['foul'])) {
 				$reason = $this->friendlyFoulReason($action['foul_reason'] ?? 'unknown');

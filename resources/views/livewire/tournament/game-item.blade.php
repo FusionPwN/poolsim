@@ -1,7 +1,7 @@
 <div class="w-full">
     @if ($game->isScheduled() || $game->isOngoing())
         <flux:button.group>
-            <flux:button :loading="false" class="flex flex-col w-full h-full p-6" variant="filled">
+            <flux:button :loading="false" href="{{ route('tournament.games.show', [$game->tournament, $game]) }}" class="flex flex-col w-full h-full p-6" variant="filled">
                 <div class="grid grid-cols-5 gap-4 w-full">
                     <div class="col-start-0 col-span-2 flex justify-start">
                         <flux:badge icon="user" color="teal">

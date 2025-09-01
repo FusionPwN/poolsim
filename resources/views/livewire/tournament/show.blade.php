@@ -48,8 +48,8 @@
 				@endif
 			</div>
 			<div>
-				@if ($tournament->players->count() > 0 && $tournament->status === TournamentStatus::OPEN)
-					<flux:button :loading="false" icon="play-circle">
+				@if ($tournament->players->count() > 0 && $tournament->games->count() > 0 && !$tournament->isEnded())
+					<flux:button icon="play-circle" wire:click="simulateAll()">
 						Simulate all
 					</flux:button>
 				@endif
