@@ -1,44 +1,58 @@
-RUNNING THE PROJECT
-- Clone
-- Run composer update
-- Run npm install
-- Run php artisan migrate
-- Run npm run build
-- Run npm run serve:all (this will initialize all the queue workers needed and the reverb instance)
-- Project is now ready
+# PoolSim
 
-KEY FEATURES
-- Game simulation 
-- Simulates actions within a game and saves them
-- Real time updates even when running jobs
-- API access
-- User API key generation in settings
-- Run simulations automaticly or run them manualy
+PoolSim is a modern pool tournament simulation platform built with Laravel, Livewire, and Tailwind CSS. It allows users to create, manage, and simulate pool tournaments with realistic game logic, real-time updates, and a robust API. The system supports both automatic and manual game simulations, tracks detailed game actions, and provides a user-friendly interface for tournament management.
 
-GAMELOGIC PARAMETERS
+## Running the Project
 
-- There should be 16 balls in total, comprising a white cue ball, seven striped balls, seven solid balls, and one black ball (8 ball)
-- A coin is tossed to decide who gets to break
-- The first player to pot an object ball will then have to continue to pot the balls from that category (stripes or solids). The opposition player will have to pot the other group
-- During the break if the 8 ball is potted the game restarts
-- A player will continue to make shots until they foul, or fail to pot an object ball. Then it is the turn of the opposing player. Play continues like this for the remainder of the game.
-- When the previous player commits a foul and it's a cue ball in hand then the next player should have a higher chance of scoring
-- There should be reasons for misses and fouls
-- Log each action being simulated
-- Multiple balls can be potted in one play, small chance depending on the player skill level, the potted balls can be owned by the opponent so this is a simulated accident
-- On the break a player might not be able to pot a ball
-- When potting the 8 ball, if the player also pots the cue ball or shoots it off the table he should lose the game
-- Potting an opponents ball is not a foul unless you hit the opponents ball first
+1. **Clone the repository**
+2. **Install dependencies**
+   - `composer update`
+   - `npm install`
+3. **Run migrations**
+   - `php artisan migrate`
+4. **Build frontend assets**
+   - `npm run build`
+5. **Start all services**
+   - `npm run serve:all` (initializes queue workers and the Reverb instance)
+6. **Project is now ready!**
 
-If a player commits a foul, the opposition player is entitled to place the cue ball anywhere on the table. There are numerous fouls in pool, some of the most common being:
+---
 
-- Failing to hit your own object balls. (can happen any time a player tries to pot a ball)
-- Hitting the cue ball off the table. (can happen any time a player tries to pot a ball)
-- Potting one of the opposition's object balls. (can happen any time a player tries to pot a ball)
-- Potting the cue ball (can happen any time a player tries to pot a ball)
+## Key Features
 
-8 Ball pool is won when one of the following occurs:
+- **Game simulation**: Simulates actions within a game and saves them
+- **Real-time updates**: Even when running jobs
+- **API access**
+- **User API key generation**: In settings
+- **Run simulations automatically or manually**
 
-- A player pots all of their designated balls and then legally pockets the 8 ball into their nominated pocket.
-- The opposing player illegally pots the 8 ball before clearing their own set of balls.
-- The 8 ball is knocked of the table by the opposition.
+---
+
+## Game Logic Parameters
+
+- 16 balls total: 1 white cue ball, 7 striped balls, 7 solid balls, 1 black ball (8 ball)
+- Coin toss decides who breaks
+- First player to pot an object ball continues with that category (stripes or solids); opponent gets the other group
+- If the 8 ball is potted on the break, the game restarts
+- Players continue shooting until they foul or fail to pot a ball; then it's the opponent's turn
+- Fouls (cue ball in hand) give the next player a higher chance of scoring
+- Reasons for misses and fouls are logged
+- Multiple balls can be potted in one play (rare, based on skill); accidental pots can benefit the opponent
+- On the break, a player might not pot a ball
+- Potting the 8 ball and cue ball together, or shooting the cue ball off the table, results in a loss
+- Potting an opponent's ball is not a foul unless you hit their ball first
+
+### Common Fouls
+
+- Failing to hit your own object balls
+- Hitting the cue ball off the table
+- Potting an opponent's object ball
+- Potting the cue ball
+
+### Winning 8 Ball Pool
+
+- Pot all designated balls, then legally pocket the 8 ball
+- Opponent illegally pots the 8 ball before clearing their own balls
+- 8 ball is knocked off the table by the opponent
+
+---
