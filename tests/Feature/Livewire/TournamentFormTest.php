@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
+use App\Jobs\SetupTournamentJob;
 use App\Livewire\Tournament\Form;
 use App\Models\Tournament;
 use Livewire\Livewire;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Queue;
 
 uses(RefreshDatabase::class);
 
 it('creates a tournament with valid data', function () {
-    Bus::fake();
+    Queue::fake([SetupTournamentJob::class]);
 
     Livewire::test(Form::class)
         ->set('name', 'Test Tournament')
@@ -24,7 +24,7 @@ it('creates a tournament with valid data', function () {
     $tournament = Tournament::where('name', 'Test Tournament')->first();
     expect($tournament)->not->toBeNull();
     expect($tournament->name)->toBe('Test Tournament');
-    Bus::assertDispatched(App\Jobs\SetupTournamentJob::class, function ($job) use ($tournament) {
+    Queue::assertPushed(SetupTournamentJob::class, function ($job) use ($tournament) {
         return $job->tournament->is($tournament)
             && $job->playerCount === 4
             && $job->queue === 'setup-tournament';

@@ -29,6 +29,7 @@ class Show extends Component
 
 	/**
 	 * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<int, \App\Models\Tournament>
+	 * @phpstan-return \Illuminate\Contracts\Pagination\LengthAwarePaginator<int, \App\Models\Tournament&object{pivot: \Illuminate\Database\Eloquent\Relations\Pivot}>
 	 */
 	#[Computed]
 	public function tournaments(): LengthAwarePaginator

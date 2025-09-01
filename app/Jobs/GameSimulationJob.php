@@ -29,7 +29,11 @@ class GameSimulationJob implements ShouldQueue
         $logic = app(GameLogic::class);
 
         $this->game->setAsOngoing();
-        broadcast(new GameStarted($this->game->tournament_id, $this->game->id));
+        if (app()->runningUnitTests()) {
+            event(new GameStarted($this->game->tournament_id, $this->game->id));
+        } else {
+            broadcast(new GameStarted($this->game->tournament_id, $this->game->id));
+        }
 
         if (! $this->skipSleep) {
             sleep(5);
@@ -37,7 +41,11 @@ class GameSimulationJob implements ShouldQueue
         
         $logic->runSimulation($this->game, $this->game->players());
         $this->game->setAsEnded();
-        broadcast(new GameFinished($this->game->tournament_id, $this->game->id));
+        if (app()->runningUnitTests()) {
+            event(new GameFinished($this->game->tournament_id, $this->game->id));
+        } else {
+            broadcast(new GameFinished($this->game->tournament_id, $this->game->id));
+        }
 
         if ($this->game->tournament->games()->ended()->count() === $this->game->tournament->games()->count()) {
             

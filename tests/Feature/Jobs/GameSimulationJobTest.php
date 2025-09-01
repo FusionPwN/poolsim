@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\GameStatus;
 use App\Enums\TournamentStatus;
 use App\Events\GameFinished;
 use App\Events\GameStarted;
@@ -28,6 +29,7 @@ it('broadcasts GameStarted and GameFinished events when simulating a game', func
         'tournament_id' => $tournament->id,
         'player1_id' => $players[0]->id,
         'player2_id' => $players[1]->id,
+        'status' => GameStatus::SCHEDULED,
     ]);
 
     (new GameSimulationJob($game, true))->handle(); // skip sleep for test speed

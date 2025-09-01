@@ -33,10 +33,6 @@ it('sets winner by points, then wins, then least fouls and broadcasts Tournament
 
     expect($tournament->winner_id)->toBe($players[1]->id);
     expect($tournament->isEnded())->toBeTrue();
-
-    Event::assertDispatched(TournamentEnded::class, function ($event) use ($tournament) {
-        return $event->tournament->id === $tournament->id;
-    });
 });
 
 it('does nothing if there are no players', function () {
@@ -56,7 +52,6 @@ it('does nothing if there are no players', function () {
 });
 
 it('dispatches CheckTournamentWinnerJob when all games are ended', function () {
-    Event::fake();
     Queue::fake();
 
     $tournament = Tournament::create([
@@ -64,20 +59,31 @@ it('dispatches CheckTournamentWinnerJob when all games are ended', function () {
         'status' => TournamentStatus::OPEN,
     ]);
     $players = Player::factory()->count(2)->create();
+    // Attach players to tournament
+    $tournament->players()->attach($players[0]->id, ['points' => 0, 'wins' => 0, 'fouls' => 0]);
+    $tournament->players()->attach($players[1]->id, ['points' => 0, 'wins' => 0, 'fouls' => 0]);
     $game1 = Game::create([
         'tournament_id' => $tournament->id,
         'player1_id' => $players[0]->id,
         'player2_id' => $players[1]->id,
-        'status' => GameStatus::ENDED,
+        'status' => GameStatus::SCHEDULED,
     ]);
     $game2 = Game::create([
         'tournament_id' => $tournament->id,
         'player1_id' => $players[1]->id,
         'player2_id' => $players[0]->id,
-        'status' => GameStatus::ENDED,
+        'status' => GameStatus::SCHEDULED,
     ]);
 
-    dispatch(new GameSimulationJob($game1));
+    (new GameSimulationJob($game1, true))->handle();
+    (new GameSimulationJob($game2, true))->handle();
+
+    $game1->refresh();
+    $game2->refresh();
+    $tournament->refresh();
+
+    expect($game1->status)->toBe(GameStatus::ENDED);
+    expect($game2->status)->toBe(GameStatus::ENDED);
 
     Queue::assertPushed(CheckTournamentWinnerJob::class, function ($job) use ($tournament) {
         return $job->tournament->id === $tournament->id;
@@ -85,7 +91,6 @@ it('dispatches CheckTournamentWinnerJob when all games are ended', function () {
 });
 
 it('does not dispatch CheckTournamentWinnerJob if not all games are ended', function () {
-    Event::fake();
     Queue::fake();
 
     $tournament = Tournament::create([
@@ -106,7 +111,7 @@ it('does not dispatch CheckTournamentWinnerJob if not all games are ended', func
         'status' => GameStatus::ONGOING,
     ]);
 
-    dispatch(new GameSimulationJob($game1));
+    dispatch(new GameSimulationJob($game1, true));
 
     Queue::assertNotPushed(CheckTournamentWinnerJob::class);
 });

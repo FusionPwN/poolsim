@@ -179,10 +179,127 @@ class Game extends Model
 		return $this->winner_id === $this->player1_id ? $this->fouls_player2 : $this->fouls_player1;
 	}
 
+	/**
+	 * Split actions into turns and describe each turn.
+	 *
+	 * @return list<array{player_id: int, player_name: string, actions: non-empty-array<int<0, max>, mixed>}>
+	 */
 	public function describe(): array
 	{
-		$logic = app(GameLogic::class);
-		return $logic->describe($this);
+		$actions = $this->actions;
+		if (empty($actions)) {
+			return [];
+		}
+
+		$turns = [];
+		$currentPlayerId = null;
+		$currentPlayerName = null;
+		$currentTurnActions = [];
+
+		/** @phpstan-ignore-next-line */
+		foreach ($actions as $action) {
+			if ($currentPlayerId === null) {
+				$currentPlayerId = $action['player_id'];
+				$currentPlayerName = $action['player_name'] ?? '';
+			}
+
+			// If player changes, start a new turn
+			if ($action['player_id'] !== $currentPlayerId && count($currentTurnActions) > 0) {
+				$allDescriptions = $this->describeTurn($currentTurnActions, $currentPlayerName);
+				foreach ($currentTurnActions as $i => $act) {
+					$currentTurnActions[$i]['descriptions'] = $allDescriptions[$i] ?? [];
+				}
+				$turns[] = [
+					'player_id' => (int) $currentPlayerId,
+					'player_name' => (string) $currentPlayerName,
+					'actions' => $currentTurnActions,
+				];
+				$currentTurnActions = [];
+				$currentPlayerId = $action['player_id'];
+				$currentPlayerName = $action['player_name'] ?? '';
+			}
+			$currentTurnActions[] = $action;
+		}
+		// Add last turn
+		if (count($currentTurnActions) > 0) {
+			$allDescriptions = $this->describeTurn($currentTurnActions, $currentPlayerName);
+			foreach ($currentTurnActions as $i => $act) {
+				$currentTurnActions[$i]['descriptions'] = $allDescriptions[$i] ?? [];
+			}
+			$turns[] = [
+				'player_id' => (int) $currentPlayerId,
+				'player_name' => (string) $currentPlayerName,
+				'actions' => $currentTurnActions,
+			];
+		}
+		return $turns;
+	}
+
+	/**
+	 * Describe a turn based on its actions and player name.
+	 *
+	 * @param array<int, array<string, mixed>> $actions
+	 * @param string $playerName
+	 * @return list<list<string>>
+	 */
+	protected function describeTurn(array $actions, string $playerName): array
+	{
+		$descriptions = [];
+		foreach ($actions as $action) {
+			$actionDescriptions = [];
+			if (!empty($action['is_break'])) {
+				$actionDescriptions[] = "Break shot to start the turn.";
+			}
+			if (!empty($action['pots'])) {
+				$balls = [];
+				foreach ($action['pots'] as $ballNum) {
+					$type = app(GameLogic::class)->getBallTypeFromNumber($ballNum);
+					$balls[] = "$ballNum ($type)";
+				}
+				$actionDescriptions[] = "Potted ball(s): " . implode(', ', $balls) . ".";
+			}
+			if (!empty($action['foul'])) {
+				$reason = $this->friendlyFoulReason($action['foul_reason'] ?? 'unknown');
+				$actionDescriptions[] = "Foul committed: $reason.";
+			}
+			if (!empty($action['miss_reason'])) {
+				$reason = $this->friendlyMissReason($action['miss_reason']);
+				$actionDescriptions[] = "Missed shot: $reason.";
+			}
+			$descriptions[] = $actionDescriptions;
+		}
+		return $descriptions;
+	}
+
+	/**
+	 * Convert foul reason to a friendly format.
+	 */
+	protected function friendlyFoulReason(string $reason): string
+	{
+		return match ($reason) {
+			'potted_8_ball_on_break' => 'Potted the 8 ball on the break (game restarted)',
+			'potted_8_ball_illegally' => 'Potted the 8 ball before clearing all group balls',
+			'black_off_table' => 'Knocked the 8 ball off the table (instant loss)',
+			'potted_opponents_ball' => 'Potted an opponent’s ball',
+			'failed_to_hit_own_balls' => 'Failed to hit own group of balls',
+			'potted_cue_ball' => 'Potted the cue ball',
+			'potted_cue_ball_and_black' => 'Potted both cue ball and 8 ball',
+			'cue_ball_off_table' => 'Knocked the cue ball off the table',
+			'potted_black_and_cue_ball_off_table' => 'Knocked both cue ball and 8 ball off the table',
+			default => ucfirst(str_replace('_', ' ', $reason)),
+		};
+	}
+
+	/**
+	 * Convert miss reason to a friendly format.
+	 */
+	protected function friendlyMissReason(string $reason): string
+	{
+		return match ($reason) {
+			'no_ball_potted_on_break' => 'No ball potted on the break',
+			'no_ball_potted' => 'No ball potted',
+			default => ucfirst(str_replace('_', ' ', $reason)),
+		};
 	}
 
 	/**

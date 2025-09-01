@@ -43,4 +43,13 @@ trait MenuHistory
 
         session()->put('menu_history', $history);
     }
+    /**
+     * Get the current menu history from session.
+     *
+     * @return array<string, array<int, array<string, mixed>>>
+     */
+    public function getMenuHistory(): array
+    {
+        return session()->get('menu_history', []);
+    }
 }

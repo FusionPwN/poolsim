@@ -3,6 +3,7 @@
 namespace App\Livewire\Tournament;
 
 use App\Enums\TournamentStatus;
+use App\Jobs\GameSimulationJob;
 use App\Models\Player;
 use App\Models\Tournament;
 use App\Traits\MenuHistory;
@@ -22,7 +23,10 @@ class Show extends Component
 
 	public function simulateAll(): void
 	{
-		
+		foreach ($this->tournament->games as $game) {
+			$job = new GameSimulationJob($game);
+			dispatch($job->onQueue('game-simulation'));
+		}
 	}
 
 	public function refresh(): void

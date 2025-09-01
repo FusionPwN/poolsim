@@ -57,9 +57,7 @@ class Tournament extends Model
         return $this->hasMany(Game::class);
     }
 
-	/**
-	 * @return HasOne<Player>
-	 */
+	/** @phpstan-ignore-next-line */
 	public function winner(): HasOne
 	{
 		return $this->hasOne(Player::class, 'id', 'winner_id');
