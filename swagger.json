@@ -177,6 +177,44 @@
         }
       }
     },
+    "/tournaments/{tournament}/games": {
+      "get": {
+        "summary": "List games for a tournament",
+        "tags": ["Games"],
+        "parameters": [
+          { "name": "tournament", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of games",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Game" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tournaments/{tournament}/players": {
+      "get": {
+        "summary": "List players for a tournament",
+        "tags": ["Players"],
+        "parameters": [
+          { "name": "tournament", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of players",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Player" } }
+              }
+            }
+          }
+        }
+      }
+    },
     "/players": {
       "get": {
         "summary": "List players",

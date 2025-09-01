@@ -12,6 +12,10 @@ use App\Livewire\Tournament\Player\Show as TournamentPlayerShow;
 use App\Livewire\Game\Show as GameShow;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', function () {
+	return redirect()->route('login');
+});
+
 Route::view('dashboard', 'dashboard')
 	->middleware(['auth', 'verified'])
 	->name('dashboard');

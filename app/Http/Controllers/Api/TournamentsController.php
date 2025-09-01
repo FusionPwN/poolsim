@@ -1,4 +1,4 @@
-<?php
+	<?php
 
 namespace App\Http\Controllers\Api;
 
@@ -16,8 +16,14 @@ class TournamentsController extends Controller
 	 */
 	public function index(Request $request): JsonResponse
 	{
-		$tournaments = Tournament::with('players')->paginate($request->input('per_page', 25));
+		$tournaments = Tournament::with('players');
 
+		if ($request->has('status')) {
+			$tournaments->where('status', $request->input('status'));
+		}
+
+		$tournaments = $tournaments->paginate($request->input('per_page', 25));
+		
 		return response()->json($tournaments, $tournaments->count() > 0 ? 200 : 204);
 	}
 
@@ -51,5 +57,26 @@ class TournamentsController extends Controller
 		}
 
 		return response()->json(['message' => 'Tournament simulation started'], 202);
+	}
+
+	/**
+	 * Get a list of games for a tournament.
+	 * @return JsonResponse
+	 */
+	public function games(Request $request, Tournament $tournament): JsonResponse
+	{
+		$games = $tournament->games()->with(['player1', 'player2', 'winner', 'loser'])->get();
+		return response()->json($games);
+	}
+
+	/**
+	 * Get a list of players for a tournament.
+	 * @return JsonResponse
+	 */
+	public function players(Request $request, Tournament $tournament): JsonResponse
+	{
+		$players = $tournament->players()->get();
+		
+		return response()->json($players);
 	}
 }
