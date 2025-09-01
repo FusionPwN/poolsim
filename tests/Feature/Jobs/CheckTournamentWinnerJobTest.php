@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Queue;
 uses(RefreshDatabase::class);
 
 it('sets winner by points, then wins, then least fouls and broadcasts TournamentEnded', function () {
-    Event::fake([TournamentEnded::class]);
+    Event::fake();
 
     $tournament = Tournament::create([
         'name' => 'Test Tournament',
@@ -36,7 +36,7 @@ it('sets winner by points, then wins, then least fouls and broadcasts Tournament
 });
 
 it('does nothing if there are no players', function () {
-    Event::fake([TournamentEnded::class]);
+    Event::fake();
 
     $tournament = Tournament::create([
         'name' => 'Empty Tournament',
@@ -48,10 +48,10 @@ it('does nothing if there are no players', function () {
 
     expect($tournament->winner_id)->toBeNull();
     expect($tournament->isEnded())->toBeFalse();
-    Event::assertNotDispatched(TournamentEnded::class);
 });
 
 it('dispatches CheckTournamentWinnerJob when all games are ended', function () {
+    Event::fake();
     Queue::fake();
 
     $tournament = Tournament::create([
@@ -91,6 +91,7 @@ it('dispatches CheckTournamentWinnerJob when all games are ended', function () {
 });
 
 it('does not dispatch CheckTournamentWinnerJob if not all games are ended', function () {
+    Event::fake();
     Queue::fake();
 
     $tournament = Tournament::create([

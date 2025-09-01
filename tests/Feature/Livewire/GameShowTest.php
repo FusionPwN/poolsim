@@ -8,11 +8,14 @@ use App\Models\Game;
 use App\Models\Player;
 use App\Models\Tournament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
 
 it('renders the game show component with turns', function () {
+    Event::fake();
+    
     $tournament = Tournament::factory()->create();
     $player1 = Player::factory()->create();
     $player2 = Player::factory()->create();

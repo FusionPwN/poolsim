@@ -9,6 +9,7 @@ use App\Models\Player;
 use App\Models\Tournament;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;
 
 uses(RefreshDatabase::class);
@@ -30,6 +31,8 @@ it('returns a single tournament', function () {
 });
 
 it('creates a tournament via store', function () {
+    Event::fake();
+    
     $user = User::factory()->create();
     $payload = [
         'name' => 'Test Tournament',
@@ -42,7 +45,9 @@ it('creates a tournament via store', function () {
 });
 
 it('simulates a tournament via simulate', function () {
+    Event::fake();
     Queue::fake();
+    
     $user = User::factory()->create();
     $tournament = Tournament::factory()->create(['name' => 'Sim Tournament']);
     $player1 = Player::factory()->create();

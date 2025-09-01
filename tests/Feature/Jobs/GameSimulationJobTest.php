@@ -15,10 +15,7 @@ use Illuminate\Support\Facades\Queue;
 uses(RefreshDatabase::class);
 
 it('broadcasts GameStarted and GameFinished events when simulating a game', function () {
-    Event::fake([
-        GameStarted::class,
-        GameFinished::class,
-    ]);
+    Event::fake();
 
     $tournament = Tournament::create([
         'name' => 'Broadcast Tournament',
