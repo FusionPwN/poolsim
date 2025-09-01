@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\GameSimulationJob;
 use App\Models\Tournament;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -40,5 +41,15 @@ class TournamentsController extends Controller
 		$tournament = Tournament::new($request->input('name'), $request->input('players'), false);
 
 		return response()->json($tournament, 201);
+	}
+
+	public function simulate(Request $request, Tournament $tournament): JsonResponse
+	{
+		foreach ($tournament->games as $game) {
+			$job = new GameSimulationJob($game);
+			dispatch($job->onQueue('game-simulation'));
+		}
+
+		return response()->json(['message' => 'Tournament simulation started'], 202);
 	}
 }

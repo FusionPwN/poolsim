@@ -1,0 +1,278 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "PoolSim API",
+    "version": "1.0.0",
+    "description": "API documentation for PoolSim tournament, player, and game management."
+  },
+  "servers": [
+    { "url": "/api" }
+  ],
+  "paths": {
+    "/tournaments": {
+      "get": {
+        "summary": "List tournaments",
+        "tags": ["Tournaments"],
+        "responses": {
+          "200": {
+            "description": "Paginated list of tournaments",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TournamentList" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a tournament",
+        "tags": ["Tournaments"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/TournamentCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Tournament created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Tournament" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tournaments/{tournament}": {
+      "get": {
+        "summary": "Show tournament details",
+        "tags": ["Tournaments"],
+        "parameters": [
+          { "name": "tournament", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tournament details",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Tournament" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tournaments/{tournament}/simulate": {
+      "post": {
+        "summary": "Simulate a tournament",
+        "tags": ["Tournaments"],
+        "parameters": [
+          { "name": "tournament", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "202": {
+            "description": "Tournament simulation started",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "404": {
+            "description": "Tournament not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tournaments/{tournament}/games/{game}": {
+      "get": {
+        "summary": "Show game details",
+        "tags": ["Games"],
+        "parameters": [
+          { "name": "tournament", "in": "path", "required": true, "schema": { "type": "integer" } },
+          { "name": "game", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Game details",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Game" }
+              }
+            }
+          },
+          "404": {
+            "description": "Game not found in tournament",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tournaments/{tournament}/games/{game}/simulate": {
+      "post": {
+        "summary": "Simulate a game",
+        "tags": ["Games"],
+        "parameters": [
+          { "name": "tournament", "in": "path", "required": true, "schema": { "type": "integer" } },
+          { "name": "game", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "202": {
+            "description": "Game simulation started",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "404": {
+            "description": "Game not found in tournament",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tournaments/{tournament}/players/{player}": {
+      "get": {
+        "summary": "Show player in tournament",
+        "tags": ["Players"],
+        "parameters": [
+          { "name": "tournament", "in": "path", "required": true, "schema": { "type": "integer" } },
+          { "name": "player", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Player details",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Player" }
+              }
+            }
+          },
+          "404": {
+            "description": "Player not found in tournament",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/players": {
+      "get": {
+        "summary": "List players",
+        "tags": ["Players"],
+        "responses": {
+          "200": {
+            "description": "Paginated list of players",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PlayerList" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/players/{player}": {
+      "get": {
+        "summary": "Show player details",
+        "tags": ["Players"],
+        "parameters": [
+          { "name": "player", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Player details",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Player" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Tournament": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "status": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "TournamentList": {
+        "type": "object",
+        "properties": {
+          "data": { "type": "array", "items": { "$ref": "#/components/schemas/Tournament" } }
+        }
+      },
+      "TournamentCreate": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "players": { "type": "array", "items": { "type": "integer" } }
+        },
+        "required": ["name", "players"]
+      },
+      "Player": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" },
+          "pivot": { "type": "object", "nullable": true }
+        }
+      },
+      "PlayerList": {
+        "type": "object",
+        "properties": {
+          "data": { "type": "array", "items": { "$ref": "#/components/schemas/Player" } }
+        }
+      },
+      "Game": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "tournament_id": { "type": "integer" },
+          "player1_id": { "type": "integer" },
+          "player2_id": { "type": "integer" },
+          "status": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" }
+        }
+      }
+    }
+  }
+}

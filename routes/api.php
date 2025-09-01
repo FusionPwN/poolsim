@@ -12,6 +12,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 		Route::group(['prefix' => '{tournament}/games'], function () {
 			Route::get('/{game}', [\App\Http\Controllers\Api\GameController::class, 'show'])->name('api.tournament.games.show');
+			Route::post('/{game}/simulate', [\App\Http\Controllers\Api\GameController::class, 'simulate'])->name('api.tournament.games.simulate');
 		});
 
 		Route::group(['prefix' => '{tournament}/players'], function () {
