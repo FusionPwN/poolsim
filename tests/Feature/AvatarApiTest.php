@@ -12,7 +12,7 @@ beforeEach(function () {
 	config(['avatar.storage_path' => class_basename(__FILE__) . '/avatars/']);
 });
 afterEach(function () {
-	Storage::disk('local')->deleteDirectory(class_basename(__FILE__));
+	Storage::disk('public')->deleteDirectory(class_basename(__FILE__));
 });
 
 it('generates avatar and stores images', function () {
@@ -22,12 +22,12 @@ it('generates avatar and stores images', function () {
     expect($result)->toHaveKey('original');
     expect($result['original'])->not->toBeNull();
     expect($result['original']['url'])->toContain(config('avatar.storage_path') . 'originals/');
-    Storage::disk('local')->assertExists($result['original']['path']);
+    Storage::disk('public')->assertExists($result['original']['path']);
 
     foreach (config('avatar.sizes', []) as $size) {
         expect($result)->toHaveKey($size);
         expect($result[$size])->not->toBeNull();
         expect($result[$size]['url'])->toContain(config('avatar.storage_path') . "$size/");
-        Storage::disk('local')->assertExists($result[$size]['path']);
+        Storage::disk('public')->assertExists($result[$size]['path']);
     }
 });

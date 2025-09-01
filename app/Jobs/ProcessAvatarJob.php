@@ -30,8 +30,8 @@ class ProcessAvatarJob implements ShouldQueue
         $results = $avatar_api->generate($this->player->gender, $this->player->name);
 
 		$this->player->update([
-			'avatar_original' => $results['original'],
-			'avatar_processed' => $results['640_360'],
+			'avatar_original' => $results['original']['path'],
+			'avatar_processed' => $results['640_360']['path'],
 		]);
     }
 }

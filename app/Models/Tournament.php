@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property TournamentStatus $status
@@ -57,17 +58,11 @@ class Tournament extends Model
     }
 
 	/**
-	 * Gets the tournament winner checking if tournament already ended
-	 * 
-	 * @return ?Player
+	 * @return HasOne<Player>
 	 */
-	public function winner(): ?Player
+	public function winner(): HasOne
 	{
-		if ($this->status !== TournamentStatus::ENDED) {
-			return null;
-		}
-
-		return $this->players()->wherePivot('points', '>', 0)->orderByPivot('points', 'desc')->first();
+		return $this->hasOne(Player::class, 'id', 'winner_id');
 	}
 
 	public static function new(string $name, int $player_count, bool $simulate): self
@@ -118,5 +113,27 @@ class Tournament extends Model
 	public function isEnded(): bool
 	{
 		return $this->status === TournamentStatus::ENDED;
+	}
+
+	/**
+	 * Get the position (rank) of a player in this tournament.
+	 *
+	 * @param Player $player
+	 * @return int|null
+	 */
+	public function getPlayerPosition(Player $player): ?int
+	{
+		$players = $this->players()
+			->orderByDesc('pivot_points')
+			->orderByDesc('pivot_wins')
+			->orderBy('pivot_fouls')
+			->get();
+
+		foreach ($players as $i => $p) {
+			if ($p->id === $player->id) {
+				return $i + 1;
+			}
+		}
+		return null;
 	}
 }

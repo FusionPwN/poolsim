@@ -41,7 +41,7 @@ class Player extends Model
 	/**
 	 * @return HasMany<Game, $this>
 	 */
-    public function history(): HasMany
+    public function games(): HasMany
     {
         return $this->hasMany(Game::class, 'winner_id')
             ->orWhere('loser_id', $this->id);
@@ -87,7 +87,7 @@ class Player extends Model
 			return '';
 		}
 
-		$url = Storage::disk('local')->url("avatars/640_360/$this->avatar_processed");
+		$url = Storage::disk('public')->url($this->avatar_processed);
 
 		return $url;
 	}

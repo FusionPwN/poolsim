@@ -19,9 +19,6 @@ class GameItem extends Component
 
     public function simulate(): void
     {
-        /* $this->tournament->status = TournamentStatus::ONGOING;
-        $this->tournament->save(); */
-
         $this->game->simulate();
     }
 

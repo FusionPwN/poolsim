@@ -13,19 +13,15 @@ class Show extends Component
 	use MenuHistory;
 
 	public Tournament $tournament;
-	public ?Player $winner = null;
 
 	public function mount(Tournament $tournament): void
 	{
 		$this->tournament = $tournament;
-		$this->winner = $tournament->winner();
 		$this->addToHistory('tournament', get_class($this->tournament), $this->tournament->id, $this->tournament->name);
 	}
 
 	public function simulateAll(): void
 	{
-		$this->tournament->status = TournamentStatus::ONGOING;
-		$this->tournament->save();
 		
 	}
 

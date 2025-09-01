@@ -27,11 +27,20 @@
 					<span>Players</span>
 					<flux:badge icon="user-group">{{ $tournament->players->count() }}</flux:badge>
 				</div>
-				@if ($winner)
+				@if ($tournament->winner)
 					<flux:separator vertical variant="subtle" />
 					<div class="flex flex-col">
 						<span>Winner</span>
-						<flux:button href="#" size="xs" icon="trophy" variant="primary" color="amber" class="h-7">{{ $winner->name }}</flux:button>
+						<flux:button href="{{ route('player.show', $tournament->winner) }}" size="xs" icon="trophy" variant="primary" color="amber" class="h-7">
+							<div class="flex items-center gap-2">
+								@if (!empty($tournament->winner->avatar()))
+									<flux:avatar size="xs" circle src="{{ $tournament->winner->avatar() }}" />
+								@else
+									<flux:avatar size="xs" circle icon="user" />
+								@endif
+								{{ $tournament->winner->name }}
+							</div>
+						</flux:button>
 					</div>
 				@endif
 			</div>
@@ -43,7 +52,6 @@
 				@endif
 			</div>
 		</div>
-		
 	</x-slot>
 
 	<div class="flex items-start max-md:flex-col gap-6 w-full">

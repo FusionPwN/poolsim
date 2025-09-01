@@ -18,7 +18,7 @@ beforeEach(function () {
 	config(['avatar.storage_path' => class_basename(__FILE__) . '/avatars/']);
 });
 afterEach(function () {
-	Storage::disk('local')->deleteDirectory(class_basename(__FILE__));
+	Storage::disk('public')->deleteDirectory(class_basename(__FILE__));
 });
 
 it('returns JSON when requested', function () {

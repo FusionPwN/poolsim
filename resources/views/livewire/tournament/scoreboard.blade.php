@@ -14,9 +14,18 @@
         <x-flux.table.rows>
             @forelse ($this->players as $player)
                 <x-flux.table.row>
-                    <x-flux.table.cell class="text-center font-black">{{ $loop->index + 1 }}</x-flux.table.cell>
+                    <x-flux.table.cell class="text-center font-black">{{ $player->position }}</x-flux.table.cell>
                     <x-flux.table.cell>
-                        <flux:button href="{{ route('player.show', $player) }}" icon="user" size="xs" variant="ghost">{{ $player->name }}</flux:button>
+                        <div class="flex items-center">
+                            <flux:button href="{{ route('player.show', $player) }}" size="xs" variant="ghost">
+                                @if (!empty($player->avatar()))
+                                    <flux:avatar size="xs" circle src="{{ $player->avatar() }}" />
+                                @else
+                                    <flux:avatar size="xs" circle icon="user" />
+                                @endif
+                                {{ $player->name }}
+                            </flux:button>
+                        </div>
                     </x-flux.table.cell>
                     <x-flux.table.cell class="text-center text-teal-500! dark:text-teal-400!">{{ $player->pivot->wins }}</x-flux.table.cell>
                     <x-flux.table.cell class="text-center text-red-500! dark:text-red-400!">{{ $player->pivot->losses }}</x-flux.table.cell>

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\GameStatus;
 use App\Events\GameFinished;
 use App\Events\GameStarted;
 use App\Models\Game;
@@ -23,6 +24,8 @@ class GameSimulationJob implements ShouldQueue
 
     public function handle(): void
     {
+        if (!$this->game->isScheduled()) return;
+
         $logic = app(GameLogic::class);
 
         $this->game->setAsOngoing();

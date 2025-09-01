@@ -43,10 +43,10 @@ class AvatarApi
 
 		// Always process originals first and save to webp format
 		$path = config('avatar.storage_path') . "originals/$filename";
-		Storage::disk('local')->put($path, $instance->toWebp(config('avatar.quality')));
+		Storage::disk('public')->put($path, $instance->toWebp(config('avatar.quality')));
 		$result['original'] = [
 			'path' => $path,
-			'url' => Storage::disk('local')->url($path)
+			'url' => Storage::disk('public')->url($path)
 		];
 
 		foreach (config('avatar.sizes', []) as $size) {
@@ -57,11 +57,11 @@ class AvatarApi
 				$temp = $instance->scale($width, $height);
 
 				$path = config('avatar.storage_path') . "$size/$filename";
-				Storage::disk('local')->put($path, $temp->toWebp(config('avatar.quality')));
+				Storage::disk('public')->put($path, $temp->toWebp(config('avatar.quality')));
 				
 				$result[$size] = [
 					'path' => $path,
-					'url' => Storage::disk('local')->url($path)
+					'url' => Storage::disk('public')->url($path)
 				];
 			}
 		}

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\GameStatus;
+use App\Jobs\GameSimulationJob;
 use App\Services\GameLogic;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -141,7 +142,7 @@ class Game extends Model
 
 	public function simulate(): void
 	{
-		app(GameLogic::class)->runSimulation($this, $this->players());
+		dispatch((new GameSimulationJob($this))->onQueue('game-simulation'));
 	}
 
 	public function getWinningBallType(): ?string

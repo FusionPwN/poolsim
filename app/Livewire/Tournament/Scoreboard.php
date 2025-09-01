@@ -28,13 +28,21 @@ class Scoreboard extends Component
     #[Computed]
     public function players(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        return $this->tournament->players()
+        $paginator = $this->tournament->players()
             ->orderByDesc('pivot_points')
             ->orderByDesc('pivot_wins')
             ->orderBy('pivot_fouls')
             ->paginate(
                 perPage: $this->perPage,
             );
+
+        // Add position index to each player
+        $start = ($paginator->currentPage() - 1) * $paginator->perPage();
+        foreach ($paginator as $i => $player) {
+            $player->position = $start + $i + 1;
+        }
+
+        return $paginator;
     }
 
     public function render(): \Illuminate\Contracts\View\View
