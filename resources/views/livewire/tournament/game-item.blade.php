@@ -1,7 +1,7 @@
 <div class="w-full">
     @if ($game->isScheduled() || $game->isOngoing())
         <flux:button.group>
-            <flux:button :loading="false" class="flex flex-col w-full h-full p-6" variant="ghost">
+            <flux:button :loading="false" class="flex flex-col w-full h-full p-6" variant="filled">
                 <div class="grid grid-cols-5 gap-4 w-full">
                     <div class="col-start-0 col-span-2 flex justify-start">
                         <flux:badge icon="user" color="teal">
@@ -34,7 +34,7 @@
             </flux:button>
             @if ($game->isScheduled())
                 <flux:button
-                    variant="ghost"
+                    variant="filled"
                     class="cursor-pointer h-full p-6"
                     style="height: auto;"
                     x-data="{ isSimulating: false }"
@@ -51,7 +51,7 @@
                     </span>
                 </flux:button>
             @else
-                <flux:button :loading="false" icon="loading" variant="ghost" class="cursor-pointer h-full p-6" style="height: auto;" disabled>
+                <flux:button :loading="false" icon="loading" variant="filled" class="cursor-pointer h-full p-6" style="height: auto;" disabled>
                     <span class="ml-2 font-mono text-xs text-gray-500" x-text="timer" x-data="{
                             startedAt: Number({{ optional($game->started_at)?->timestamp ?? 'null' }}),
                             finishedAt: Number({{ optional($game->finished_at)?->timestamp ?? 'null' }}),
@@ -101,7 +101,7 @@
             @endif
         </flux:button.group>
     @else
-        <flux:button :loading="false" href="{{ route('tournament.games.show', [$game->tournament, $game]) }}" variant="ghost" class="cursor-pointer flex flex-col w-full h-full p-6">
+        <flux:button :loading="false" href="{{ route('tournament.games.show', [$game->tournament, $game]) }}" variant="filled" class="cursor-pointer flex flex-col w-full h-full p-6">
             <div class="grid grid-cols-5 gap-4 w-full">
                 <div class="col-start-0 col-span-2 flex justify-start">
                     <flux:badge icon="hand-thumb-up" color="amber">
@@ -115,7 +115,7 @@
                         </div>
                     </flux:badge>
                 </div>
-                <div class="flex items-center justify-center">
+                <div class="flex items-center justify-center text-zinc-500">
                     vs
                 </div>
                 <div class="col-start-4 col-span-2 flex justify-end">
@@ -134,13 +134,27 @@
 
             <div class="grid grid-cols-5 gap-4 w-full mt-3">
                 <div class="col-start-0 col-span-2 flex justify-start">
-                    <span>{{ $game->fouls_player1 }}</span>
+                    <span>{{ $game->winner->skill }}</span>
                 </div>
-                <div class="flex items-center justify-center">
-                Fouls
+                <div class="flex items-center justify-center text-zinc-500">
+                    Skill
                 </div>
                 <div class="col-start-4 col-span-2 flex justify-end">
-                    <span>{{ $game->fouls_player2 }}</span>
+                    <span>{{ $game->loser->skill }}</span>
+                </div>
+            </div>
+
+            <flux:separator variant="subtle" />
+
+            <div class="grid grid-cols-5 gap-4 w-full mt-3">
+                <div class="col-start-0 col-span-2 flex justify-start">
+                    <span>{{ $game->getFoulsWinner() }}</span>
+                </div>
+                <div class="flex items-center justify-center text-zinc-500">
+                    Fouls
+                </div>
+                <div class="col-start-4 col-span-2 flex justify-end">
+                    <span>{{ $game->getFoulsLoser() }}</span>
                 </div>
             </div>
 
@@ -150,8 +164,8 @@
                 <div class="col-start-0 col-span-2">
                     <span>0</span>
                 </div>
-                <div class="flex items-center justify-center">
-                Balls left
+                <div class="flex items-center justify-center text-zinc-500">
+                    Balls left
                 </div>
                 <div class="col-start-4 col-span-2 flex justify-end">
                     <span>{{ $game->getLosingBallsLeft() }}</span>
@@ -164,8 +178,8 @@
                 <div class="col-start-0 col-span-2">
                     <span>{{ $game->getWinningBallType() }}</span>
                 </div>
-                <div class="flex items-center justify-center">
-                Ball type
+                <div class="flex items-center justify-center text-zinc-500">
+                    Ball type
                 </div>
                 <div class="col-start-4 col-span-2 flex justify-end">
                     <span>{{ $game->getLosingBallType() }}</span>

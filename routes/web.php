@@ -8,6 +8,7 @@ use App\Livewire\Tournament\Show as TournamentShow;
 use App\Livewire\Tournament\Index as TournamentIndex;
 use App\Livewire\Player\Index as PlayerIndex;
 use App\Livewire\Player\Show as PlayerShow;
+use App\Livewire\Tournament\Player\Show as TournamentPlayerShow;
 use App\Livewire\Game\Show as GameShow;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,10 @@ Route::middleware(['auth'])->group(function () {
 
 		Route::group(['prefix' => '{tournament}/games'], function () {
 			Route::get('/{game}', GameShow::class)->name('tournament.games.show');
+		});
+
+		Route::group(['prefix' => '{tournament}/players'], function () {
+			Route::get('/{player}', TournamentPlayerShow::class)->name('tournament.players.show');
 		});
     });
 

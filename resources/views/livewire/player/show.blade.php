@@ -44,7 +44,7 @@
 		</div>
 	</x-slot>
 
-	<div class="flex items-start max-md:flex-col gap-6 w-full">
+	<div class="flex items-start max-xl:flex-col gap-6 w-full">
 		<div class="w-full">
 			<flux:heading size="lg" level="1" class="flex items-center gap-3 mb-5">
 				Tournament history
@@ -100,13 +100,36 @@
 			</flux:heading>
 
 			<div class="flex flex-col gap-3">
-				@forelse ($player->games as $game)
+				@forelse ($this->games as $game)
+					@livewire('tournament.game-item', ['game' => $game], key('game-' . $game->id))
 				@empty
 					<div class="flex gap-4 items-center justify-center py-4 text-center text-sm text-zinc-500">
 						No games to display.
 					</div>
 				@endforelse
+
+				{{ $this->games->links('vendor.livewire.tailwind') }}
 			</div>
 		</div>
 	</div>
 </x-layouts.app.layout>
+
+@script
+	<script>
+		Echo.private('tournaments')
+			.listen('PlayersGenerated', (e) => {
+				$wire.refresh();
+			})
+			.listen('GamesGenerated', (e) => {
+				$wire.refresh();
+			})
+			.listen('TournamentUpdated', (e) => {
+				$wire.refresh();
+			});
+		
+		Echo.private('games')
+			.listen('GameFinished', (e) => {
+				$wire.refresh();
+			});
+	</script>
+@endscript

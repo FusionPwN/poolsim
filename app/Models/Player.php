@@ -43,8 +43,8 @@ class Player extends Model
 	 */
     public function games(): HasMany
     {
-        return $this->hasMany(Game::class, 'winner_id')
-            ->orWhere('loser_id', $this->id);
+        return $this->hasMany(Game::class, 'player1_id')
+            ->orWhere('player2_id', $this->id);
     }
 
 	/**

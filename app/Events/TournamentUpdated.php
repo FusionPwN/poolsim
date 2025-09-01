@@ -32,6 +32,7 @@ class TournamentUpdated implements ShouldBroadcast
     {
         return [
             new PrivateChannel('tournaments.' . $this->tournament->id),
+            new PrivateChannel('tournaments'),
         ];
     }
 }

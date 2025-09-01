@@ -33,6 +33,7 @@ class GameFinished implements ShouldBroadcast
         return [
             new PrivateChannel('tournaments.' . $this->tournament_id),
             new PrivateChannel('games.' . $this->game_id),
+            new PrivateChannel('games'),
         ];
     }
 }

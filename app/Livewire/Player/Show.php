@@ -15,7 +15,7 @@ class Show extends Component
 
 	public string $sortBy = 'created_at';
 	public string $sortDirection = 'desc';
-	public int $perPage = 2;
+	public int $perPage = 10;
 	public Player $player;
 
 	public function mount(Player $player): void
@@ -23,6 +23,9 @@ class Show extends Component
 		$this->player = $player;
 		$this->addToHistory('player', get_class($this->player), $this->player->id, $this->player->name);
 	}
+
+	public function rerfresh(): void
+	{}
 
 	/**
 	 * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<int, \App\Models\Tournament>
@@ -45,7 +48,7 @@ class Show extends Component
 	public function games(): LengthAwarePaginator
 	{
 		return $this->player->games()
-			->tap(fn($query) => $this->sortBy ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
+			->tap(fn($query) => $query->orderBy('created_at', 'desc')->orderBy('sequence', 'asc'))
 			->paginate(
 				perPage: $this->perPage,
 				pageName: 'games'

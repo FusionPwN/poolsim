@@ -1,4 +1,4 @@
-<div class="w-full sticky top-[1rem]">
+<div class="w-full">
     <flux:heading size="lg" level="1" class="mb-5">Scoreboard</flux:heading>
     <x-flux.table.table :paginate="$this->players">
         <x-flux.table.columns>
@@ -17,7 +17,7 @@
                     <x-flux.table.cell class="text-center font-black">{{ $player->position }}</x-flux.table.cell>
                     <x-flux.table.cell>
                         <div class="flex items-center">
-                            <flux:button href="{{ route('player.show', $player) }}" size="xs" variant="ghost">
+                            <flux:button href="{{ route('tournament.players.show', [$tournament, $player]) }}" size="xs" variant="ghost">
                                 @if (!empty($player->avatar()))
                                     <flux:avatar size="xs" circle src="{{ $player->avatar() }}" />
                                 @else

@@ -4,16 +4,19 @@
 
 <x-layouts.app.layout>
 	<x-slot name="heading">
-		{{ $tournament->name }} 
-		<flux:badge icon="{{ match ($tournament->status) {
-			TournamentStatus::OPEN => 'check-circle',
-			TournamentStatus::ONGOING => 'loading',
-			TournamentStatus::ENDED => 'x-circle',
-		} }}" class="" size="sm" color="{{ match ($tournament->status) {
-			TournamentStatus::OPEN => 'teal',
-			TournamentStatus::ONGOING => 'orange',
-			TournamentStatus::ENDED => 'zinc',
-		} }}">{{ Str::title($tournament->status->value) }}</flux:badge>
+		<div class="flex items-center gap-3">
+			<flux:icon name="trophy"/>
+			{{ $tournament->name }} 
+			<flux:badge icon="{{ match ($tournament->status) {
+				TournamentStatus::OPEN => 'check-circle',
+				TournamentStatus::ONGOING => 'loading',
+				TournamentStatus::ENDED => 'x-circle',
+			} }}" class="" size="sm" color="{{ match ($tournament->status) {
+				TournamentStatus::OPEN => 'teal',
+				TournamentStatus::ONGOING => 'orange',
+				TournamentStatus::ENDED => 'zinc',
+			} }}">{{ Str::title($tournament->status->value) }}</flux:badge>
+		</div>
 	</x-slot>
 	<x-slot name="subheading">
 		<div class="flex justify-between items-end">
@@ -54,7 +57,7 @@
 		</div>
 	</x-slot>
 
-	<div class="flex items-start max-md:flex-col gap-6 w-full">
+	<div class="flex items-start max-xl:flex-col gap-6 w-full">
 		@livewire('tournament.scoreboard', ['tournament' => $tournament])
 		<flux:separator vertical variant="subtle" />
 		<div class="w-full">

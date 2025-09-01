@@ -21,9 +21,10 @@ class Game extends Model
 	protected function casts(): array
 	{
 		return [
-			'status'     => GameStatus::class,
-			'started_at' => 'datetime',
-			'ended_at'   => 'datetime',
+			'status'     	=> GameStatus::class,
+			'actions'		=> 'json',
+			'started_at' 	=> 'datetime',
+			'ended_at'   	=> 'datetime',
 		];
 	}
 
@@ -166,6 +167,22 @@ class Game extends Model
 		}
 
 		return $this->{'balls_left_' . $this->getLosingBallType()};
+	}
+
+	public function getFoulsWinner(): ?int
+	{
+		return $this->winner_id === $this->player1_id ? $this->fouls_player1 : $this->fouls_player2;
+	}
+
+	public function getFoulsLoser(): ?int
+	{
+		return $this->winner_id === $this->player1_id ? $this->fouls_player2 : $this->fouls_player1;
+	}
+
+	public function describe(): array
+	{
+		$logic = app(GameLogic::class);
+		return $logic->describe($this);
 	}
 
 	/**
