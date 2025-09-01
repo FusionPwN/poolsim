@@ -24,9 +24,10 @@ it('renders the tournament show page', function () {
 it('adds tournament to menu history on mount', function () {
     $tournament = Tournament::factory()->create();
     $component = Livewire::test(Show::class, ['tournament' => $tournament]);
-    expect($component->instance()->getMenuHistory())
-        ->toBeArray()
-        ->not->toBeEmpty();
+        $menuHistory = $component->instance()->getMenuHistory();
+        expect($menuHistory)
+            ->toBeArray()
+            ->toHaveCount(1);
 });
 
 it('simulates all games in the tournament', function () {
