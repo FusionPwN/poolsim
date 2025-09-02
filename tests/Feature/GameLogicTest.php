@@ -381,3 +381,30 @@ it('prioritizes the first ball according to the priority argument and chance', f
 		expect($logic->isBallStripes($balls[1]))->toBe(true);
 	}
 });
+
+it('handles potting opponents balls and 8ball while having no more balls', function () {
+    $logic = new GameLogic();
+	$players = Player::factory()->count(2)->create();
+	$logic->setPlayerData($players);
+	$logic->playerData[0]['group'] = 'solids';
+	$logic->playerData[1]['group'] = 'stripes';
+    $logic->resetBalls();
+    $logic->current = 0;
+    $logic->opponent = 1;
+    $logic->isBreak = false;
+
+    // Force potting opponent's balls and 8-ball while having no more balls
+    $logic->balls['solids'] = array_fill(1, 7, false);
+    $logic->balls['stripes'] = array_fill(9, 7, true);
+    $logic->balls['black'] = false;
+    $logic->balls['cue'] = true;
+
+    $action = [
+        'pots' => [7, 8],
+        'foul' => false,
+        'foul_reason' => null,
+    ];
+    $logic->simulateFoul($action, ...$logic->getPlayerData());
+
+    expect($action['foul_reason'])->not->toBe('potted_opponents_ball');
+});
