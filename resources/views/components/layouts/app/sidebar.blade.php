@@ -54,10 +54,9 @@
 
 			<flux:spacer />
 
-			<flux:radio.group x-data x-model="$flux.appearance">
+			<flux:radio.group x-data x-model="$flux.appearance" variant="segmented">
 				<flux:radio value="light" icon="sun" label="{{ __('Light') }}"></flux:radio>
 				<flux:radio value="dark" icon="moon" label="{{ __('Dark') }}"></flux:radio>
-				<flux:radio value="system" icon="computer-desktop" label="{{ __('System') }}"></flux:radio>
 			</flux:radio.group>
 
 			<!-- Desktop User Menu -->
