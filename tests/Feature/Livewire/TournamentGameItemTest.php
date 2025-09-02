@@ -9,10 +9,13 @@ use App\Models\Player;
 use App\Enums\GameStatus;
 use Livewire\Livewire;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 
 uses(RefreshDatabase::class);
 
 it('renders the game item component', function () {
+    Event::fake();
+    
     $tournament = Tournament::factory()->create();
     $player1 = Player::factory()->create();
     $player2 = Player::factory()->create();
@@ -28,6 +31,8 @@ it('renders the game item component', function () {
 });
 
 it('can call simulate on the game', function () {
+    Event::fake();
+    
     $tournament = Tournament::factory()->create();
     $player1 = Player::factory()->create();
     $player2 = Player::factory()->create();

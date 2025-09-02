@@ -32,6 +32,7 @@ it('adds tournament to menu history on mount', function () {
 
 it('simulates all games in the tournament', function () {
     Event::fake();
+    
     $tournament = Tournament::factory()->create();
     $player1 = Player::factory()->create();
     $player2 = Player::factory()->create();

@@ -8,10 +8,13 @@ use App\Models\Tournament;
 use App\Models\Game;
 use Livewire\Livewire;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 
 uses(RefreshDatabase::class);
 
 it('renders the player show component with tournaments and games', function () {
+    Event::fake();
+    
     $player = Player::factory()->create();
     $tournament1 = Tournament::factory()->create();
     $tournament2 = Tournament::factory()->create();
@@ -41,6 +44,8 @@ it('renders the player show component with tournaments and games', function () {
 });
 
 it('paginates tournaments and games for the player', function () {
+    Event::fake();
+    
     $player = Player::factory()->create();
     $tournaments = Tournament::factory()->count(15)->create();
     foreach ($tournaments as $i => $tournament) {
@@ -60,5 +65,4 @@ it('paginates tournaments and games for the player', function () {
         ->assertSee('Showing')
         ->assertSee('results')
         ->assertSee('10');
-})
-;
+});

@@ -8,10 +8,13 @@ use App\Models\Player;
 use App\Models\Game;
 use Livewire\Livewire;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 
 uses(RefreshDatabase::class);
 
 it('renders the player show component with games', function () {
+    Event::fake();
+    
     $tournament = Tournament::factory()->create();
     $player = Player::factory()->create();
     $opponent = Player::factory()->create();
@@ -40,6 +43,8 @@ it('renders the player show component with games', function () {
 });
 
 it('paginates games for the player', function () {
+    Event::fake();
+    
     $tournament = Tournament::factory()->create();
     $player = Player::factory()->create();
     $tournament->players()->attach($player->id, ['points' => 20]);

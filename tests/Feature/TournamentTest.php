@@ -9,6 +9,7 @@ use App\Models\Player;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 use function Pest\Laravel\assertDatabaseHas;
 
@@ -23,7 +24,7 @@ afterEach(function () {
 });
 
 it('creates tournament and dispatches setup job', function () {
-	Bus::fake();
+	Queue::fake();
 
 	$name = 'Summer Pool Bash';
 	$playerCount = 8;
@@ -41,8 +42,10 @@ it('creates tournament and dispatches setup job', function () {
 		'status' => TournamentStatus::OPEN,
 	]);
 
-	Bus::assertDispatched(SetupTournamentJob::class, function ($job) use ($tournament, $playerCount) {
-		return $job->tournament->id === $tournament->id && $job->playerCount === $playerCount;
+	Queue::assertPushed(SetupTournamentJob::class, function ($job) use ($tournament, $playerCount) {
+		return $job->tournament->is($tournament)
+			&& $job->playerCount === $playerCount
+			&& $job->queue === 'setup-tournament';
 	});
 });
 

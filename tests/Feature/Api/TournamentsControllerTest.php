@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Queue;
 uses(RefreshDatabase::class);
 
 it('returns a paginated list of tournaments', function () {
+    Event::fake();
+
     $user = User::factory()->create();
     Tournament::factory()->count(2)->create();
     $response = $this->actingAs($user)->getJson(route('api.tournaments.index'));
@@ -23,6 +25,8 @@ it('returns a paginated list of tournaments', function () {
 });
 
 it('returns a single tournament', function () {
+    Event::fake();
+    
     $user = User::factory()->create();
     $tournament = Tournament::factory()->create();
     $response = $this->actingAs($user)->getJson(route('api.tournament.show', $tournament));

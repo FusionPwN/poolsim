@@ -19,6 +19,8 @@ afterEach(function () {
 });
 
 it('triggers PlayerCreated event on player creation', function () {
+    Event::fake();
+    
     Player::factory()->create([
         'name' => 'Test Player',
         'avatar_original' => 'original.png',

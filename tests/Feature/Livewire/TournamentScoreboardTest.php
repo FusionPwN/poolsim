@@ -7,6 +7,7 @@ use App\Models\Tournament;
 use App\Models\Player;
 use Livewire\Livewire;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 
 uses(RefreshDatabase::class);
 
@@ -18,6 +19,8 @@ it('renders the tournament scoreboard page', function () {
 });
 
 it('paginates and ranks players by points, wins, fouls', function () {
+    Event::fake();
+    
     $tournament = Tournament::factory()->create();
     $players = [
         Player::create(['name' => 'Alice']),

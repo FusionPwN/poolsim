@@ -6,10 +6,13 @@ use App\Models\Tournament;
 use App\Models\Player;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 
 uses(RefreshDatabase::class);
 
 it('returns a single player for a tournament', function () {
+    Event::fake();
+    
     $user = User::factory()->create();
     $tournament = Tournament::factory()->create();
     $player = Player::factory()->create();

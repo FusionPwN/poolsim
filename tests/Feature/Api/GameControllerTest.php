@@ -9,11 +9,14 @@ use App\Models\Tournament;
 use App\Models\Player;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;
 
 uses(RefreshDatabase::class);
 
 it('returns a single game for a tournament', function () {
+    Event::fake();
+    
     $user = User::factory()->create();
     $tournament = Tournament::factory()->create();
     $player1 = Player::factory()->create();
@@ -31,6 +34,8 @@ it('returns a single game for a tournament', function () {
 });
 
 it('returns 404 for a game not in the tournament', function () {
+    Event::fake();
+
     $user = User::factory()->create();
     $tournament1 = Tournament::factory()->create();
     $tournament2 = Tournament::factory()->create();
@@ -43,7 +48,9 @@ it('returns 404 for a game not in the tournament', function () {
 });
 
 it('starts game simulation for a tournament game', function () {
+    Event::fake();
     Queue::fake();
+    
     $user = User::factory()->create();
     $tournament = Tournament::factory()->create();
     $player1 = Player::factory()->create();

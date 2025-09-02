@@ -13,6 +13,7 @@ uses(RefreshDatabase::class);
 
 it('creates games for a tournament when the job runs', function () {
     Event::fake();
+    
     $tournament = Tournament::factory()->create();
     $players = Player::factory()->count(3)->create();
     $tournament->players()->attach($players);

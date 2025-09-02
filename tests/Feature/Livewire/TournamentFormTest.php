@@ -7,12 +7,14 @@ use App\Livewire\Tournament\Form;
 use App\Models\Tournament;
 use Livewire\Livewire;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;
 
 uses(RefreshDatabase::class);
 
 it('creates a tournament with valid data', function () {
-    Queue::fake([SetupTournamentJob::class]);
+    Event::fake();
+    Queue::fake();
 
     Livewire::test(Form::class)
         ->set('name', 'Test Tournament')
@@ -32,6 +34,8 @@ it('creates a tournament with valid data', function () {
 });
 
 it('shows validation errors for invalid data', function () {
+    Event::fake();
+    
     Livewire::test(Form::class)
         ->set('name', '')
         ->set('players', 1)

@@ -6,10 +6,13 @@ use App\Livewire\Player\Index;
 use App\Models\Player;
 use Livewire\Livewire;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 
 uses(RefreshDatabase::class);
 
 it('renders the player index component with players', function () {
+    Event::fake();
+    
     $players = Player::factory()->count(3)->create();
     Livewire::test(Index::class)
         ->assertStatus(200)
@@ -19,6 +22,8 @@ it('renders the player index component with players', function () {
 });
 
 it('searches for players by name', function () {
+    Event::fake();
+
     $players = Player::factory()->count(3)->create();
     $searchName = $players[1]->name;
     Livewire::test(Index::class)
@@ -30,6 +35,8 @@ it('searches for players by name', function () {
 });
 
 it('sorts players by name', function () {
+    Event::fake();
+
     $players = Player::factory()->count(3)->create();
     $sorted = $players->sortBy('name')->values();
     $component = Livewire::test(Index::class)
@@ -40,6 +47,8 @@ it('sorts players by name', function () {
 });
 
 it('paginates players', function () {
+    Event::fake();
+    
     $players = Player::factory()->count(30)->create();
     Livewire::test(Index::class)
         ->set('perPage', 10)
