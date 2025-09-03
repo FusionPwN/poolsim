@@ -24,7 +24,7 @@ class Show extends Component
 		$this->addToHistory('player', get_class($this->player), $this->player->id, $this->player->name);
 	}
 
-	public function rerfresh(): void
+	public function refresh(): void
 	{}
 
 	/**
